@@ -1,0 +1,9 @@
+{
+  "id": "fixture.clean",
+  "name": "Fixture",
+  "version": "0.0.1",
+  "author": "fixture",
+  "description": "A fixture plugin for the kit's own tests.",
+  "license": "MIT",
+  "entryPoints": ["Panel.qml"]
+}
