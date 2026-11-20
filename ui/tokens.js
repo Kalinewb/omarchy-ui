@@ -146,6 +146,11 @@ var DENSITY = {
   standalone: { row: 32, body: "subtitle" }    // Style.font.subtitle, 13
 }
 
+// The warning colour when the palette has none to hand over: a plain amber,
+// a fallback default only (the colour is worked out from whatever is handed in,
+// and repaired to 4.5:1 like every other text colour).
+var WARNING_DEFAULT = "#e0a030"
+
 // How much of secondary stays when metadata is eased back toward the surface.
 var METADATA_EASE = 0.6
 
@@ -187,6 +192,9 @@ function reducedFrom(env) {
 //   (metadata, the third text level, is worked out from secondary: see below)
 //   p.accent      optional; else the label colour
 //   p.urgent      optional; red
+//   p.warning     optional; amber. Standalone and styled fall back to WARNING_DEFAULT;
+//                 a hosted-opaque panel with none handed over uses the label (as for
+//                 destructive: colour only where the panel owns its colours)
 //   p.focusAlpha  optional; Style.focusBorderAlpha
 //
 // Whatever is handed in is repaired to the floors, not trusted: label and
@@ -231,6 +239,11 @@ function roles(p) {
   // Red is for destructive and errors, and only where the panel owns its colours.
   var destructive = opaque || p.urgent === undefined ? label : legible(p.urgent, TEXT)
 
+  // Warning, the middle of info (label) and error (destructive): a mark and a word are what
+  // tell it apart where there is no colour to use.
+  var warningBase = p.warning !== undefined ? p.warning : (opaque ? undefined : WARNING_DEFAULT)
+  var warning = warningBase === undefined ? label : legible(warningBase, TEXT)
+
   var hairlineA = Math.max(ALPHA.hairline, markAlpha(S, label, MARK))
   var ringA = Math.max(p.focusAlpha !== undefined ? Number(p.focusAlpha) : 0.25, markAlpha(S, label, MARK))
   var knobOn = extreme(accentMark)
@@ -239,7 +252,7 @@ function roles(p) {
     mode: mode, opaque: opaque,
     surface: S,
     label: label, secondary: secondary, metadata: metadata,
-    accent: accentMark, accentText: accentText, destructive: destructive,
+    accent: accentMark, accentText: accentText, destructive: destructive, warning: warning,
     fill: tint(a.fill), hover: tint(a.hover), selected: tint(a.selected), pressed: tint(a.pressed),
     // Level 2 floats over content (a tip, a toast, an open pick): a solid colour in every mode, or the text behind would show through.
     raised: mix(S, label, a.raised),
@@ -267,6 +280,7 @@ function pairs(r) {
     { name: "metadata on fill",           role: "text", fg: r.metadata,     bg: [r.fill, r.hover, r.raised] },
     { name: "accent text on surface",     role: "text", fg: r.accentText,  bg: [r.surface, r.hover] },
     { name: "destructive on surface",     role: "text", fg: r.destructive, bg: [r.surface, r.hover, r.fill] },
+    { name: "warning on surface",         role: "text", fg: r.warning,     bg: [r.surface, r.hover, r.fill] },
     { name: "accent mark on surface",     role: "ui",   fg: r.accent,      bg: [r.surface] },
     { name: "hairline on surface",        role: "ui",   fg: r.hairline,    bg: [r.surface] },
     { name: "focus ring on surface",      role: "ui",   fg: r.ring,        bg: [r.surface] },

@@ -182,6 +182,7 @@ Item {
         details: "camera_busy"
         showDetails: true
       }
+      UNotice { theme: root.theme; width: parent.width; tone: "warning"; text: "The camera is covered. Face ID may not see you." }
       UNotice { theme: root.theme; width: parent.width; tone: "info"; text: "Face ID will ask once for your password." }
       UEmpty { theme: root.theme; width: parent.width; text: "No profiles yet."; actionText: "Set up profiles" }
       Row {

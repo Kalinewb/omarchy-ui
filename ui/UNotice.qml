@@ -4,16 +4,21 @@ import QtQuick
 // (plan-apple-ui.md 4.2 "Error"). The sentence comes from the plugin's own
 // table (errors.js); an unknown code reads "Something went wrong." and the
 // code appears only under Details. A code never reaches the surface any other
-// way. The mark is a glyph in a ring as well as a colour, so the state never
-// rests on colour alone.
+// way. The mark is a glyph in a ring as well as a colour, and a screen reader
+// hears the word ("Warning: ..."), so the state never rests on colour alone.
+//
+//   tone    mark   colour
+//   info    i      label
+//   warning ▲      theme.warning (amber; the label in a hosted-opaque panel)
+//   error   !      theme.destructive (red; the label in a hosted-opaque panel)
 //
 //   UNotice { theme: theme; text: errors.message(code); details: errors.details(code)
 //             actionText: "Try again"; onActed: retry() }
 Rectangle {
   id: root
   required property var theme
-  // "warn" or "info"
-  property string tone: "warn"
+  // "info", "warning" or "error"; "warn" is the old name of "error" and still reads as it
+  property string tone: "error"
   property string text: ""
   property string details: ""
   // One recovery verb, "Try again", or empty.
@@ -21,14 +26,16 @@ Rectangle {
   property bool showDetails: false
   signal acted()
 
-  readonly property color ink: tone === "warn" ? theme.destructive : theme.label
+  readonly property string kind: tone === "warn" ? "error" : tone
+  readonly property color ink: kind === "error" ? theme.destructive : (kind === "warning" ? theme.warning : theme.label)
+  readonly property string glyph: kind === "error" ? "!" : (kind === "warning" ? "▲" : "i")
 
   implicitWidth: 360
   implicitHeight: column.implicitHeight + 2 * theme.sp.sm
   radius: theme.radius(Math.min(height, theme.rowHeight))
   color: theme.fill
   Accessible.role: Accessible.StaticText
-  Accessible.name: text
+  Accessible.name: (kind === "error" ? "Error: " : (kind === "warning" ? "Warning: " : "")) + text
 
   Column {
     id: column
@@ -51,7 +58,7 @@ Rectangle {
         property bool uiMark: true
         Text {
           anchors.centerIn: parent
-          text: root.tone === "warn" ? "!" : "i"
+          text: root.glyph
           color: root.ink
           font.family: root.theme.fontFamily
           font.pixelSize: root.theme.footnoteSize

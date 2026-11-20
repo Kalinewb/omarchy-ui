@@ -46,6 +46,7 @@ QtObject {
     secondary: hosted ? host.secondary : undefined,
     accent: hosted && !styled ? host.accent : Commons.Color.accent,
     urgent: hosted && !styled ? undefined : Commons.Color.urgent,
+    warning: hosted ? host.warning : undefined,   // a host may hand one over; else amber (standalone, styled) or the label (hosted-opaque)
     focusAlpha: Commons.Style.focusBorderAlpha
   })
   function paint(c) { return Qt.rgba(c.r, c.g, c.b, c.a) }
@@ -57,6 +58,7 @@ QtObject {
   readonly property color accent: paint(roles.accent)
   readonly property color accentText: paint(roles.accentText)
   readonly property color destructive: paint(roles.destructive)
+  readonly property color warning: paint(roles.warning)
   readonly property color fill: paint(roles.fill)
   readonly property color hover: paint(roles.hover)
   readonly property color selected: paint(roles.selected)

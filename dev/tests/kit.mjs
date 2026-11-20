@@ -56,6 +56,14 @@ section('the spacing scale')
   check('every theme.sp.<name> a component reads is on the scale', unknown.length === 0, unknown.join(','))
 }
 
+section('UNotice tones')
+{
+  const n = code('UNotice.qml')
+  check('UNotice has info, warning and error, each with its own glyph, and "warn" still reads as error', /"info"/.test(text('UNotice.qml')) && /kind === "warning"/.test(n) && /kind === "error"/.test(n) && /tone === "warn" \? "error"/.test(n) && /"▲"/.test(n) && /"!"/.test(n) && /"i"/.test(n))
+  check('the tones are told apart by a glyph and a spoken word, not colour alone', /Accessible\.name: \(kind === "error" \? "Error: "/.test(n) && /"Warning: "/.test(n) && /text: root\.glyph/.test(n))
+  check('the warning ink is theme.warning (a role from tokens.js) and UTheme exposes it', /theme\.warning/.test(n) && /property color warning: paint\(roles\.warning\)/.test(code('UTheme.qml')))
+}
+
 section('the focusable ones')
 const focusable = qml.filter(f => /activeFocusOnTab/.test(text(f)))
 check(`every component with a tab stop (${focusable.length}) names itself for a screen reader (Accessible.name)`, focusable.every(f => /Accessible\.name/.test(text(f))), focusable.filter(f => !/Accessible\.name/.test(text(f))).join(','))

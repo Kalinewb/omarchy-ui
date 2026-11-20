@@ -37,6 +37,7 @@ Item {
   Component { id: backC; UBack { theme: stub } }
   Component { id: closeC; UClose { theme: stub } }
   Component { id: confirmC; UConfirmSheet { theme: stub; width: 400; sentence: "Remove Ana? Her face data is erased."; verb: "Remove" } }
+  Component { id: noticeC; UNotice { theme: stub; width: 400; text: "The camera is busy." } }
   Component { id: toastC; UToast { theme: stub } }
   Component { id: ringC; URing { theme: stub } }
   Component { id: rowC; URow { theme: stub; label: "Row"; width: 300; USwitch { theme: stub; label: "x" } } }
@@ -269,6 +270,14 @@ Item {
       var spy = createTemporaryObject(spyC, root, { target: act, signalName: "dismissed" })
       act.hide()
       compare(spy.count, 1); verify(!act.shown)
+    }
+
+    function test_notice_tones_have_their_own_mark_and_word() {
+      var n = createTemporaryObject(noticeC, root)
+      compare(n.glyph, "!"); compare(n.ink, stub.destructive); compare(n.Accessible.name, "Error: The camera is busy.")
+      n.tone = "warn"; compare(n.glyph, "!"); compare(n.ink, stub.destructive)   // the old name reads as error
+      n.tone = "warning"; compare(n.glyph, "▲"); compare(n.ink, stub.warning); compare(n.Accessible.name, "Warning: The camera is busy.")
+      n.tone = "info"; compare(n.glyph, "i"); compare(n.ink, stub.label); compare(n.Accessible.name, "The camera is busy.")
     }
 
     function test_ring_turns_and_stops_under_reduced_motion() {

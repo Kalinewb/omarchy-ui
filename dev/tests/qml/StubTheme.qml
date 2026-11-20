@@ -16,6 +16,7 @@ QtObject {
   property color accent: "#ffffff"
   property color accentText: "#ffffff"
   property color destructive: "#ff6b6b"
+  property color warning: "#e0a030"
   property color fill: "#0a0a0a"
   property color hover: "#141414"
   property color selected: "#2e2e2e"

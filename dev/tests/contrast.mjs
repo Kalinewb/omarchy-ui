@@ -121,7 +121,7 @@ section('roles: what each mode promises')
 {
   const host = hosts['black host (the notch)']
   const hosted = rolesFor('hosted', host), styled = rolesFor('styled', host), alone = rolesFor('standalone', Object.assign({}, hosts['catppuccin-oled (this desktop)']))
-  const colourRoles = ['surface', 'label', 'secondary', 'metadata', 'accent', 'accentText', 'destructive', 'fill', 'hover', 'selected', 'pressed', 'raised', 'hairline', 'ring', 'trackOn', 'knobOn', 'trackOff', 'knobOff', 'disabled']
+  const colourRoles = ['surface', 'label', 'secondary', 'metadata', 'accent', 'accentText', 'destructive', 'warning', 'fill', 'hover', 'selected', 'pressed', 'raised', 'hairline', 'ring', 'trackOn', 'knobOn', 'trackOff', 'knobOff', 'disabled']
   const translucent = r => colourRoles.filter(k => T.translucent(r[k]))
   check('hosted-opaque: every role is an opaque colour (zero translucent)', translucent(hosted).length === 0, translucent(hosted).join(','))
   check('hosted-opaque on white: the same', translucent(rolesFor('hosted', hosts['white host'])).length === 0)
@@ -140,6 +140,35 @@ section('roles: what each mode promises')
     const b = T.roles({ mode: 'hosted', surface: '#000000', foreground: '#ffffff', secondary: '#99ebebf5', accent: '#ffffff' })
     return hex(a.label) === hex(b.label) && hex(a.secondary) === hex(b.secondary) && !T.translucent(b.fill) && T.translucent(a.fill)
   })())
+}
+
+section('roles: the warning colour')
+{
+  const bad = []
+  const stylish = (mode, host, warning) => T.roles({ mode, surface: host.surface, foreground: host.foreground, secondary: host.secondary, accent: host.accent, urgent: mode === 'hosted' ? undefined : host.urgent, warning })
+  const labelsOf = []
+  for (const [name, host] of Object.entries(hosts)) for (const mode of ['standalone', 'hosted', 'styled']) {
+    const r = stylish(mode, host)
+    const backs = [r.surface, r.hover, r.fill].map(b => T.over(b, r.surface))
+    const worst = Math.min(...backs.map(b => T.contrast(r.warning, T.over(b, r.surface))))
+    if (worst < T.TEXT - 1e-9) bad.push(`${name}/${mode} ${worst.toFixed(2)}`)
+    if (r.warning.a !== 1) bad.push(`${name}/${mode} translucent`)
+    labelsOf.push([name, mode, T.hex(r.warning) === T.hex(r.label)])
+  }
+  check('warning holds 4.5:1 on the surface, hover and fill, and is opaque, on every host in every mode', bad.length === 0, bad.slice(0, 3).join('; '))
+  check('warning is a pair in T.check: text role, floor 4.5', T.check(rolesFor('standalone', hosts['black host (the notch)'])).some(x => x.name === 'warning on surface' && x.role === 'text' && x.floor === 4.5))
+  {
+    const alone = rolesFor('standalone', hosts['black host (the notch)']), oled = rolesFor('styled', hosts['catppuccin-oled (this desktop)'])
+    check('standalone and styled: warning is amber, not the label and not the destructive red', [alone, oled].every(r => T.hex(r.warning) !== T.hex(r.label) && T.hex(r.warning) !== T.hex(r.destructive) && r.warning.r > r.warning.b + 0.3), [alone, oled].map(r => T.hex(r.warning)).join(' '))
+  }
+  check('hosted-opaque with no warning handed over: the label (colour only where the panel owns its colours), so the icon and the word carry it', labelsOf.filter(x => x[1] === 'hosted').every(x => x[2]))
+  {
+    const r = stylish('hosted', hosts['black host (the notch)'], '#ffb000')
+    check('hosted-opaque with a warning handed over by the host: that colour, repaired and solid', T.hex(r.warning) === '#ffb000' && r.warning.a === 1 && T.contrast(r.warning, r.surface) >= 4.5)
+    const dim = stylish('hosted', hosts['black host (the notch)'], '#332200')
+    check('a handed-over warning that fails 4.5:1 is lifted, not trusted', T.contrast(dim.warning, dim.surface) >= 4.5 && T.hex(dim.warning) !== '#332200')
+  }
+  check('the same on white: the default amber is darkened to read on a light surface', (() => { const r = stylish('standalone', hosts['white host']); return T.contrast(r.warning, r.surface) >= 4.5 && r.warning.r > r.warning.b })())
 }
 
 section('roles: the three text levels (label, secondary, metadata)')
