@@ -50,7 +50,7 @@ Item {
   Text {
     anchors.left: parent.left
     anchors.right: chevron.left
-    anchors.leftMargin: root.theme.space(12)
+    anchors.leftMargin: root.theme.sp.md
     anchors.verticalCenter: parent.verticalCenter
     text: root.shown
     elide: Text.ElideRight
@@ -61,7 +61,7 @@ Item {
   Text {
     id: chevron
     anchors.right: parent.right
-    anchors.rightMargin: root.theme.space(12)
+    anchors.rightMargin: root.theme.sp.md
     anchors.verticalCenter: parent.verticalCenter
     text: root.open ? "▴" : "▾"
     color: root.theme.secondary
@@ -80,7 +80,7 @@ Item {
   Rectangle {
     id: list
     visible: root.open
-    y: root.height + root.theme.space(4)
+    y: root.height + root.theme.sp.xs
     width: root.width
     height: root.options.length * root.theme.rowHeight + 2 * root.theme.hairlineWidth
     radius: root.theme.radius(root.theme.rowHeight)
@@ -110,7 +110,7 @@ Item {
           }
           Text {
             anchors.left: parent.left
-            anchors.leftMargin: root.theme.space(12)
+            anchors.leftMargin: root.theme.sp.md
             anchors.verticalCenter: parent.verticalCenter
             text: choice.modelData.label
             color: root.theme.label
@@ -120,7 +120,7 @@ Item {
           }
           Text {
             anchors.right: parent.right
-            anchors.rightMargin: root.theme.space(12)
+            anchors.rightMargin: root.theme.sp.md
             anchors.verticalCenter: parent.verticalCenter
             visible: choice.chosen
             text: "✓"

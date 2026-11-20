@@ -46,8 +46,8 @@ Item {
   TextInput {
     id: edit
     anchors.fill: parent
-    anchors.leftMargin: root.theme.space(12)
-    anchors.rightMargin: root.theme.space(12)
+    anchors.leftMargin: root.theme.sp.md
+    anchors.rightMargin: root.theme.sp.md
     verticalAlignment: TextInput.AlignVCenter
     clip: true
     text: root.value

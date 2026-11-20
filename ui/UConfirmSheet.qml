@@ -61,7 +61,7 @@ Item {
     Text {
       anchors.left: parent.left
       anchors.right: buttons.left
-      anchors.rightMargin: root.theme.space(8)
+      anchors.rightMargin: root.theme.sp.sm
       anchors.verticalCenter: parent.verticalCenter
       text: root.sentence
       elide: Text.ElideRight
@@ -73,7 +73,7 @@ Item {
       id: buttons
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
-      spacing: root.theme.space(8)
+      spacing: root.theme.sp.sm
       UButton { id: cancelButton; theme: root.theme; text: "Cancel"; onClicked: root.cancel() }
       UButton {
         id: verbButton

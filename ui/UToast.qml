@@ -45,10 +45,10 @@ Item {
     id: box
     opacity: root.shown ? 1 : 0
     // Arrives on the spring, leaves on OutCubic and shorter; with reduced motion only the fade remains.
-    property real rise: root.shown ? 0 : root.theme.space(12)
+    property real rise: root.shown ? 0 : root.theme.sp.md
     transform: Translate { y: box.rise }
-    width: content.implicitWidth + 2 * root.theme.space(12)
-    height: Math.max(root.theme.rowHeight, content.implicitHeight) + 2 * root.theme.space(4)
+    width: content.implicitWidth + 2 * root.theme.sp.md
+    height: Math.max(root.theme.rowHeight, content.implicitHeight) + 2 * root.theme.sp.xs
     radius: root.theme.radius(height)
     color: root.theme.raised
     Behavior on opacity { NumberAnimation { duration: root.shown ? root.theme.fadeInMs : root.theme.fadeOutMs; easing.type: Easing.OutCubic } }
@@ -65,7 +65,7 @@ Item {
     Row {
       id: content
       anchors.centerIn: parent
-      spacing: root.theme.space(8)
+      spacing: root.theme.sp.sm
       Text {
         anchors.verticalCenter: parent.verticalCenter
         text: root.text

@@ -24,7 +24,7 @@ Rectangle {
   readonly property color ink: tone === "warn" ? theme.destructive : theme.label
 
   implicitWidth: 360
-  implicitHeight: column.implicitHeight + 2 * theme.space(8)
+  implicitHeight: column.implicitHeight + 2 * theme.sp.sm
   radius: theme.radius(Math.min(height, theme.rowHeight))
   color: theme.fill
   Accessible.role: Accessible.StaticText
@@ -35,11 +35,11 @@ Rectangle {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.verticalCenter: parent.verticalCenter
-    anchors.margins: root.theme.space(12)
-    spacing: root.theme.space(4)
+    anchors.margins: root.theme.sp.md
+    spacing: root.theme.sp.xs
 
     Row {
-      spacing: root.theme.space(8)
+      spacing: root.theme.sp.sm
       Rectangle {
         id: mark
         width: 20
@@ -68,8 +68,8 @@ Rectangle {
       }
     }
     Row {
-      leftPadding: mark.width + root.theme.space(8)
-      spacing: root.theme.space(8)
+      leftPadding: mark.width + root.theme.sp.sm
+      spacing: root.theme.sp.sm
       visible: root.actionText !== "" || root.details !== ""
       UButton {
         theme: root.theme
@@ -88,7 +88,7 @@ Rectangle {
     }
     Text {
       visible: root.showDetails && root.details !== ""
-      x: mark.width + root.theme.space(8)
+      x: mark.width + root.theme.sp.sm
       width: column.width - x
       text: root.details
       wrapMode: Text.WrapAnywhere

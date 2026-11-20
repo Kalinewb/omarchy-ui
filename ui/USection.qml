@@ -13,8 +13,8 @@ Column {
   default property alias content: body.data
 
   width: parent ? parent.width : implicitWidth
-  topPadding: first ? 0 : theme.space(24)
-  spacing: theme.space(4)
+  topPadding: first ? 0 : theme.sp.xl
+  spacing: theme.sp.xs
 
   Text {
     text: root.title

@@ -87,13 +87,22 @@ QtObject {
 
   // ---- size
   readonly property int minHit: Tokens.MIN_HIT
-  readonly property int rowHeight: Math.max(Tokens.DENSITY[density].row, bodySize + 2 * space(8))
+  readonly property int rowHeight: Math.max(Tokens.DENSITY[density].row, bodySize + 2 * sp.sm)
   readonly property int controlHeight: rowHeight - 4
   readonly property int switchWidth: Tokens.SWITCH.width
   readonly property int switchHeight: Tokens.SWITCH.height
   readonly property int hairlineWidth: Tokens.HAIRLINE
   readonly property int tipMax: Tokens.TIP_MAX
   function space(n) { return Commons.Style.space(n) }
+  // The named scale (tokens.js SPACING), each through space(): theme.sp.md is 12 at the default scale.
+  readonly property QtObject sp: QtObject {
+    readonly property int xs: root.space(Tokens.SPACING.xs)
+    readonly property int sm: root.space(Tokens.SPACING.sm)
+    readonly property int md: root.space(Tokens.SPACING.md)
+    readonly property int lg: root.space(Tokens.SPACING.lg)
+    readonly property int xl: root.space(Tokens.SPACING.xl)
+    readonly property int xxl: root.space(Tokens.SPACING.xxl)
+  }
   function radius(h) {
     if (hosted) return typeof host.radiusFor === "function" ? host.radiusFor(h) : Tokens.radius(host.radius, h)
     return Tokens.radius(Commons.Style.cornerRadius, h)

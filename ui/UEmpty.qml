@@ -10,14 +10,14 @@ Item {
   signal acted()
 
   implicitWidth: 320
-  implicitHeight: column.implicitHeight + 2 * theme.space(16)
+  implicitHeight: column.implicitHeight + 2 * theme.sp.lg
   Accessible.role: Accessible.StaticText
   Accessible.name: text
 
   Column {
     id: column
     anchors.centerIn: parent
-    spacing: root.theme.space(8)
+    spacing: root.theme.sp.sm
     Text {
       anchors.horizontalCenter: parent.horizontalCenter
       text: root.text

@@ -170,8 +170,11 @@ section('roles: every stock and user theme, in every mode')
 }
 
 section('the other tokens')
+check('spacing scale: xs 4, sm 8, md 12, lg 16, xl 24, xxl 32, in that order', Object.entries(T.SPACING).map(([k, v]) => k + v).join() === 'xs4,sm8,md12,lg16,xl24,xxl32')
+check('spacing scale: strictly increasing, and SPACE is the same six values', T.SPACE.every((v, i) => i === 0 || v > T.SPACE[i - 1]) && T.SPACE.join() === Object.values(T.SPACING).join())
+check('spacing scale: every step is on the 4 px grid', T.SPACE.every(v => v % 4 === 0))
 check('density: row 30 on the notch, 32 standalone; body from Style.font.body / Style.font.subtitle', T.DENSITY.notch.row === 30 && T.DENSITY.standalone.row === 32 && T.DENSITY.notch.body === 'body' && T.DENSITY.standalone.body === 'subtitle')
-check('space is 4, 8, 12, 16, 24 with a 1 px hairline; hit 24; switch 22 x 42; text floor 11; tips 60', T.SPACE.join() === '4,8,12,16,24' && T.HAIRLINE === 1 && T.MIN_HIT === 24 && T.SWITCH.height === 22 && T.SWITCH.width === 42 && T.MIN_TEXT === 11 && T.TIP_MAX === 60)
+check('the grid is 4, 8, 12, 16, 24, 32 with a 1 px hairline; hit 24; switch 22 x 42; text floor 11; tips 60', T.SPACE.join() === '4,8,12,16,24,32' && T.HAIRLINE === 1 && T.MIN_HIT === 24 && T.SWITCH.height === 22 && T.SWITCH.width === 42 && T.MIN_TEXT === 11 && T.TIP_MAX === 60)
 check('radius is the host\'s, never more than half the height', T.radius(10, 30) === 10 && T.radius(10, 14) === 7 && T.radius(0, 30) === 0 && T.radius(undefined, 30) === 0 && T.radius(40, 22) === 11)
 {
   const env = vars => name => vars[name] || ''

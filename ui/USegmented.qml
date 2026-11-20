@@ -54,7 +54,7 @@ Item {
         required property int index
         readonly property bool chosen: modelData.value === root.value
         property bool hot: segMouse.containsMouse
-        width: Math.max(root.theme.minHit, text.implicitWidth + 2 * root.theme.space(12))
+        width: Math.max(root.theme.minHit, text.implicitWidth + 2 * root.theme.sp.md)
         height: root.height - 4
         Accessible.role: Accessible.RadioButton
         Accessible.name: modelData.label

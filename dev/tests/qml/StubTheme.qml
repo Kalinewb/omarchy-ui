@@ -44,6 +44,14 @@ QtObject {
   property int hairlineWidth: 1
   property int tipMax: 60
   function space(n) { return n }
+  readonly property QtObject sp: QtObject {
+    readonly property int xs: 4
+    readonly property int sm: 8
+    readonly property int md: 12
+    readonly property int lg: 16
+    readonly property int xl: 24
+    readonly property int xxl: 32
+  }
   function radius(h) { return Math.min(10, h / 2) }
 
   property var arriveCurve: [0.3, 0.5, 0.7, 1.0, 1, 1]

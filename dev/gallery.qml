@@ -37,7 +37,7 @@ Item {
     id: spec
     property string caption: ""
     default property alias body: slot.data
-    spacing: 4
+    spacing: root.theme.sp.xs
     Item { id: slot; width: childrenRect.width; height: childrenRect.height }
     Text {
       text: spec.caption
@@ -61,7 +61,7 @@ Item {
       UBack { id: back; theme: root.theme; visible: root.theme.mode === "standalone"; anchors.verticalCenter: parent.verticalCenter }
       Text {
         anchors.left: root.theme.mode === "standalone" ? back.right : parent.left
-        anchors.leftMargin: root.theme.mode === "standalone" ? root.theme.space(4) : 0
+        anchors.leftMargin: root.theme.mode === "standalone" ? root.theme.sp.xs : 0
         anchors.verticalCenter: parent.verticalCenter
         text: "Appearance"
         color: root.theme.label
@@ -71,7 +71,7 @@ Item {
       }
       UClose { theme: root.theme; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
     }
-    Item { width: 1; height: root.theme.space(8) }
+    Item { width: 1; height: root.theme.sp.sm }
 
     USection {
       theme: root.theme
@@ -101,7 +101,7 @@ Item {
       theme: root.theme
       title: "Buttons"
       Row {
-        spacing: root.theme.space(8)
+        spacing: root.theme.sp.sm
         height: root.theme.rowHeight
         UButton { theme: root.theme; text: "Not now" }
         UButton { theme: root.theme; text: "Remove Ana"; kind: "destructive" }
@@ -114,9 +114,9 @@ Item {
       theme: root.theme
       title: "States, left to right: idle, hover, pressed, focus, disabled"
       Column {
-        spacing: root.theme.space(8)
+        spacing: root.theme.sp.sm
         Row {
-          spacing: root.theme.space(8)
+          spacing: root.theme.sp.sm
           UButton { theme: root.theme; text: "Done"; kind: "primary" }
           UButton { theme: root.theme; text: "Done"; kind: "primary"; hot: true }
           UButton { theme: root.theme; text: "Done"; kind: "primary"; down: true }
@@ -124,7 +124,7 @@ Item {
           UButton { theme: root.theme; text: "Done"; kind: "primary"; enabled: false }
         }
         Row {
-          spacing: root.theme.space(8)
+          spacing: root.theme.sp.sm
           UButton { theme: root.theme; text: "Cancel" }
           UButton { theme: root.theme; text: "Cancel"; hot: true }
           UButton { theme: root.theme; text: "Cancel"; down: true }
@@ -132,7 +132,7 @@ Item {
           UButton { theme: root.theme; text: "Cancel"; enabled: false }
         }
         Row {
-          spacing: root.theme.space(16)
+          spacing: root.theme.sp.lg
           USwitch { theme: root.theme; label: "Off" }
           USwitch { theme: root.theme; label: "On"; checked: true }
           USwitch { theme: root.theme; label: "On, focused"; checked: true; showFocus: true }
@@ -140,13 +140,13 @@ Item {
           USwitch { theme: root.theme; label: "Disabled"; enabled: false }
         }
         Row {
-          spacing: root.theme.space(8)
+          spacing: root.theme.sp.sm
           UField { theme: root.theme; width: 150; label: "Empty"; placeholder: "Name" }
           UField { theme: root.theme; width: 150; label: "Focused"; value: "Ana"; hot: true }
           UStepper { theme: root.theme; label: "Radius"; value: 0; from: 0; to: 40; unit: " px" }
         }
         Row {
-          spacing: root.theme.space(16)
+          spacing: root.theme.sp.lg
           UBack { theme: root.theme }
           UBack { theme: root.theme; hot: true }
           UBack { theme: root.theme; showFocus: true }
@@ -154,7 +154,7 @@ Item {
           UClose { theme: root.theme; hot: true }
           UClose { theme: root.theme; showFocus: true }
         }
-        Item { width: 1; height: root.theme.space(24) }
+        Item { width: 1; height: root.theme.sp.xl }
       }
     }
   }
@@ -171,7 +171,7 @@ Item {
       theme: root.theme
       title: "Feedback"
       first: true
-      spacing: root.theme.space(8)
+      spacing: root.theme.sp.sm
       UToast { id: toastPlain; theme: root.theme; Component.onCompleted: show("Profile saved") }
       UToast { id: toastAction; theme: root.theme; Component.onCompleted: show("Ana removed", "Undo") }
       UNotice {
@@ -185,7 +185,7 @@ Item {
       UNotice { theme: root.theme; width: parent.width; tone: "info"; text: "Face ID will ask once for your password." }
       UEmpty { theme: root.theme; width: parent.width; text: "No profiles yet."; actionText: "Set up profiles" }
       Row {
-        spacing: root.theme.space(24)
+        spacing: root.theme.sp.xl
         URing { theme: root.theme; value: 0.62; text: "Saving" }
         URing { theme: root.theme; text: "Installing, 3 left" }
       }
@@ -194,7 +194,7 @@ Item {
     USection {
       theme: root.theme
       title: "Confirm: the row it replaces, then the question"
-      spacing: root.theme.space(8)
+      spacing: root.theme.sp.sm
       UConfirmSheet {
         theme: root.theme
         width: parent.width

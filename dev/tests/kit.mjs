@@ -2,7 +2,7 @@
 // the theme it is handed and nothing else.
 import fs from 'node:fs'
 import path from 'node:path'
-import { check, finish, section, REPO } from './lib.mjs'
+import { check, finish, section, load, REPO } from './lib.mjs'
 
 const ui = path.join(REPO, 'ui')
 const files = fs.readdirSync(ui).filter(f => f !== 'KIT')
@@ -42,6 +42,19 @@ check('the stub has nothing UTheme does not', phantom.length === 0, phantom.join
 check('UTheme exposes pairs and palette ({pairs}) for plan-surface-v2.md, and the three modes', utheme.has('pairs') && utheme.has('palette') && /"standalone"/.test(text('UTheme.qml')) && /"hosted-opaque"/.test(text('UTheme.qml')) && /"styled"/.test(text('UTheme.qml')))
 check('UTheme is not a singleton (it has to see a plugin\'s surfaceHost)', !/pragma Singleton/.test(text('UTheme.qml')))
 check('UTheme reads OMARCHY_REDUCED_MOTION and the NOTCH_ alias only through tokens.js reducedFrom', /reducedFrom/.test(text('UTheme.qml')) && /NOTCH_REDUCED_MOTION/.test(text('tokens.js')) && /OMARCHY_REDUCED_MOTION/.test(text('tokens.js')))
+
+section('the spacing scale')
+{
+  const T = load('ui/tokens.js'), names = Object.keys(T.SPACING)
+  const sp = src => { const m = src.match(/property QtObject sp:\s*QtObject\s*\{([\s\S]*?)\n  \}/); return m ? [...m[1].matchAll(/property int (\w+):\s*([^\n]+)/g)].map(x => [x[1], x[2].trim()]) : [] }
+  const inTheme = sp(code('UTheme.qml')), inStub = sp(fs.readFileSync(path.join(REPO, 'dev/tests/qml/StubTheme.qml'), 'utf8').replace(/\/\/.*$/gm, ''))
+  check('UTheme.sp has xs, sm, md, lg, xl, xxl, each through space() from Tokens.SPACING', inTheme.map(x => x[0]).join() === names.join() && inTheme.every(([k, v]) => v === `root.space(Tokens.SPACING.${k})`), inTheme.map(x => x.join('=')).join(' '))
+  check('the stub\'s theme.sp has the same six values as tokens.js', inStub.map(([k, v]) => k + v).join() === Object.entries(T.SPACING).map(([k, v]) => k + v).join())
+  const literal = qml.filter(f => f !== 'UTheme.qml' && /\bspace\((4|8|12|16|24|32)\)/.test(code(f)))
+  check('no component spells a scale value as space(<n>): the named token is used', literal.length === 0, literal.join(','))
+  const unknown = qml.flatMap(f => [...code(f).matchAll(/\btheme\.sp\.(\w+)/g)].map(m => m[1])).filter(n => !names.includes(n))
+  check('every theme.sp.<name> a component reads is on the scale', unknown.length === 0, unknown.join(','))
+}
 
 section('the focusable ones')
 const focusable = qml.filter(f => /activeFocusOnTab/.test(text(f)))

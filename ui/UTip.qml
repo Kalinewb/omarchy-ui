@@ -57,9 +57,9 @@ Item {
     visible: opacity > 0
     opacity: root.shown && root.placement === "float" ? 1 : 0
     x: Math.max(0, Math.min(root.width - width, (root.width - width) / 2))
-    y: root.height + root.theme.space(4)
-    width: Math.min(280, tipText.implicitWidth + 2 * root.theme.space(8))
-    height: tipText.implicitHeight + 2 * root.theme.space(4)
+    y: root.height + root.theme.sp.xs
+    width: Math.min(280, tipText.implicitWidth + 2 * root.theme.sp.sm)
+    height: tipText.implicitHeight + 2 * root.theme.sp.xs
     radius: root.theme.radius(height)
     color: root.theme.raised
     border.width: root.theme.hairlineWidth
@@ -68,9 +68,9 @@ Item {
     Behavior on opacity { NumberAnimation { duration: root.shown ? root.theme.fadeInMs : root.theme.fadeOutMs; easing.type: Easing.OutCubic } }
     Text {
       id: tipText
-      x: root.theme.space(8)
-      y: root.theme.space(4)
-      width: parent.width - 2 * root.theme.space(8)
+      x: root.theme.sp.sm
+      y: root.theme.sp.xs
+      width: parent.width - 2 * root.theme.sp.sm
       text: root.text
       wrapMode: Text.WordWrap
       color: root.theme.label
@@ -93,7 +93,7 @@ Item {
     opacity: foot.text !== "" ? 1 : 0
     Behavior on opacity { NumberAnimation { duration: foot.text !== "" ? root.theme.fadeInMs : root.theme.fadeOutMs; easing.type: Easing.OutCubic } }
   }
-  implicitHeight: line ? theme.footnoteSize + theme.space(8) : 0
+  implicitHeight: line ? theme.footnoteSize + theme.sp.sm : 0
 
   UKeys { level: "tip"; open: root.shown; onEscaped: root.dismissed = true }
 }

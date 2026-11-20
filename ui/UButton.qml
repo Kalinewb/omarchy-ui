@@ -33,7 +33,7 @@ Item {
   readonly property bool isDestructive: kind === "destructive"
 
   implicitHeight: isLink ? theme.controlHeight : theme.rowHeight
-  implicitWidth: Math.max(theme.minHit, label.implicitWidth + 2 * theme.space(isLink ? 8 : 16))
+  implicitWidth: Math.max(theme.minHit, label.implicitWidth + 2 * (isLink ? theme.sp.sm : theme.sp.lg))
   activeFocusOnTab: enabled
   Accessible.role: Accessible.Button
   Accessible.name: text

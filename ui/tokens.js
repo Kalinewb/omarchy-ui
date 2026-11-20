@@ -130,7 +130,11 @@ function capAlpha(bg, ink, tint, ratio, limit) {
 
 // ---------------------------------------------------------------- tokens
 
-var SPACE = [4, 8, 12, 16, 24]   // the grid; hairline is 1
+// The named spacing scale: every gap, margin and inset a component draws is one
+// of these (UTheme.sp.<name>, each through Style.space, so it follows the user's
+// spacing scale). One scale for both densities; density changes row height only.
+var SPACING = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 }
+var SPACE = [SPACING.xs, SPACING.sm, SPACING.md, SPACING.lg, SPACING.xl, SPACING.xxl]   // the grid, smallest first; hairline is 1
 var HAIRLINE = 1
 var MIN_HIT = 24                 // px, any hit target
 var SWITCH = { height: 22, width: 42 }

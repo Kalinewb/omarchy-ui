@@ -28,12 +28,12 @@ Item {
   property bool showFocus: activeFocus
 
   readonly property bool stacked: variant === "stacked"
-  readonly property int gap: theme.space(8)
+  readonly property int gap: theme.sp.sm
 
   width: parent ? parent.width : implicitWidth
   implicitHeight: stacked
-    ? Math.ceil(stackedLabel.implicitHeight) + theme.space(4) + Math.max(slot.childrenRect.height, trailingSlot.childrenRect.height) + theme.space(8)
-    : Math.max(theme.rowHeight, Math.max(slot.childrenRect.height, trailingSlot.childrenRect.height) + theme.space(4))
+    ? Math.ceil(stackedLabel.implicitHeight) + theme.sp.xs + Math.max(slot.childrenRect.height, trailingSlot.childrenRect.height) + theme.sp.sm
+    : Math.max(theme.rowHeight, Math.max(slot.childrenRect.height, trailingSlot.childrenRect.height) + theme.sp.xs)
   implicitWidth: 320
   height: implicitHeight
 
@@ -72,7 +72,7 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: parent.top
-    anchors.topMargin: root.theme.space(4)
+    anchors.topMargin: root.theme.sp.xs
     text: root.label
     elide: Text.ElideRight
     color: root.theme.secondary
@@ -84,7 +84,7 @@ Item {
     id: group
     spacing: root.gap
     x: root.stacked ? 0 : root.width - width
-    y: root.stacked ? stackedLabel.y + stackedLabel.height + root.theme.space(4) : (root.height - height) / 2
+    y: root.stacked ? stackedLabel.y + stackedLabel.height + root.theme.sp.xs : (root.height - height) / 2
     Text {
       visible: root.value !== ""
       anchors.verticalCenter: parent.verticalCenter

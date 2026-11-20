@@ -22,7 +22,7 @@ Item {
 
   Row {
     id: row
-    spacing: root.theme.space(8)
+    spacing: root.theme.sp.sm
     anchors.verticalCenter: parent.verticalCenter
 
     Item {

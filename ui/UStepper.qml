@@ -25,7 +25,7 @@ Item {
   property bool hotPlus: plus.containsMouse
 
   implicitHeight: theme.controlHeight
-  implicitWidth: 2 * theme.controlHeight + Math.max(56, number.implicitWidth + 2 * theme.space(8))
+  implicitWidth: 2 * theme.controlHeight + Math.max(56, number.implicitWidth + 2 * theme.sp.sm)
   activeFocusOnTab: enabled
   Accessible.role: Accessible.SpinBox
   Accessible.name: label + " " + value + unit
