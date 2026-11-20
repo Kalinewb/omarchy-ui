@@ -50,7 +50,7 @@ Item {                                   // the plugin's root
 
 | class | component | |
 |---|---|---|
-| Back | `UBack` | chevron left of the title, "Back" tooltip and name. In the notch the back step is the existing top-middle strip, so this is not drawn there |
+| Back | `UBack` | chevron left of the title, "Back" tooltip and name. In the notch (a host with `panelBack`) the back step is the top-middle strip and Esc its alias, so this is not drawn there; see *Layout: the top-centre zone* |
 | Close | `UClose` | the one `✕`, top-right |
 | Buttons | `UButton` | `primary` (one per surface), `quiet`, `destructive` (verb + object, last, never default), `link` (the `flow` variant) |
 | Switch | `USwitch` | 22 x 42 track in a 24 px target |
@@ -63,6 +63,8 @@ Item {                                   // the plugin's root
 | Confirm | `UConfirmSheet` | an inline row that replaces the action row, never an overlay |
 | Keys | `UKeys`, `keys.js` | Esc closes, in order: an edit, a tip, an open pick, a modal, then goes back, then closes |
 | | `UTheme`, `tokens.js`, `spring.js`, `errors.js` | roles, density and motion; the springs; one error table per plugin |
+
+**Layout: the top-centre zone.** Under the notch there is one back control, the strip at the top centre of every panel (`surfaceHost.backZoneWidth` by `backZoneHeight`: the resting notch's footprint, 180 by 32 by default). The whole zone is the press target, it sits above the panel, and Esc is its invisible alias. A panel built from this kit therefore (1) starts its first row below `backZoneHeight`, or keeps its header controls in the gutters beside the zone, so that no button, `MouseArea`, `TapHandler` item, field or tab stop is inside it; (2) draws `UBack` and any "esc goes back" hint only when the host has no such strip (`host.features` lacks `panelBack`), and keeps a hint only for what Esc does that is not obvious ("esc stops the check"); (3) answers the strip through `goBackInside()` / `canGoBack`. `notch backZone` lists every control of the open panel inside the zone, and a panel's suite should assert that list is empty for each route.
 
 **Dismiss words** are three: **Cancel** (abandon), **Done** (finish), **Not now** (defer). "Close", "Keep", "Later", "Dismiss", "OK" and "Okay" are out. Action verbs are an open set and are not dismiss words ("Remove Ana", "Install Face ID"), plus the named recoveries "Try again" and "Undo".
 
