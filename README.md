@@ -42,7 +42,7 @@ Item {                                   // the plugin's root
 | **hosted-opaque** | `host` set, `host.styled` not true (surface contract 1) | only what the notch hands over (`color`, `foreground`, `secondary`, `accent`), every colour a computed **solid**: never a translucent item, gradient or blur |
 | **styled** | `host.styled === true` (contract 2) | the kit's own roles and alpha fills over the host's surface; when the notch's guard falls back, `styled` goes false and the same bindings give hosted-opaque by themselves |
 
-`host` is any `surfaceHost`-shaped object (`color`, `foreground`, `secondary`, `accent`, `radiusFor(size)`, `fontFamily`, optionally `styled`, `reducedMotion`). Density follows: **notch** rows are 30 px with 12 px body, **standalone** 32 px with 13.
+`host` is any `surfaceHost`-shaped object (`color`, `foreground`, `secondary`, `accent`, `radiusFor(size)`, `fontFamily`, optionally `styled`, `reducedMotion`). Density follows: **notch** rows are 30 px with 12 px body, **standalone** 32 px with 13; both use the one spacing scale below.
 
 ![hosted, black](docs/gallery/hosted-black.png)
 
@@ -58,7 +58,7 @@ Item {                                   // the plugin's root
 | Field | `UField` (Enter commits, Esc reverts), `UStepper` (`-` / `+`, Left / Right) | |
 | Row, section | `URow` (`row` and `stacked`, a `trailing` slot), `USection` | |
 | Tip | `UTip` | `float` (a box) or `foot` (one reserved line, no box) |
-| Toast, error | `UToast`, `UNotice` | a code never reaches the surface; unknown codes read "Something went wrong." |
+| Toast, notice | `UToast`, `UNotice` | `UNotice` has three tones: `info` (`i`), `warning` (`▲`) and `error` (`!`, the old `warn`), each a glyph and a spoken word as well as a colour; `UToast` has no tones. A code never reaches the surface; unknown codes read "Something went wrong." |
 | Empty, progress | `UEmpty`, `URing` | the ring is determinate or indeterminate, and holds still under reduced motion |
 | Confirm | `UConfirmSheet` | an inline row that replaces the action row, never an overlay |
 | Keys | `UKeys`, `keys.js` | Esc closes, in order: an edit, a tip, an open pick, a modal, then goes back, then closes |
@@ -68,7 +68,11 @@ Item {                                   // the plugin's root
 
 **Dismiss words** are three: **Cancel** (abandon), **Done** (finish), **Not now** (defer). "Close", "Keep", "Later", "Dismiss", "OK" and "Okay" are out. Action verbs are an open set and are not dismiss words ("Remove Ana", "Install Face ID"), plus the named recoveries "Try again" and "Undo".
 
-**Colour.** Text is held to 4.5:1 and every mark (a border, ring, track, knob or arc, each declaring `uiMark: true`) to 3:1, in every mode, on every host: `tokens.js` repairs what it is handed with `lift` (the host's `lift` of `plan-surface-v2.md`, same vectors) and caps each fill so the text on it keeps its floor. Hairlines and the focus ring are raised to 3:1 (a 25 % ring is about 1.6:1 on black). `contrast` is the one WCAG body that `Bar.qml` in omarchy-notch has; the test compares them. Destructive is red only where the panel owns its colours.
+**Colour.** Text is held to 4.5:1 and every mark (a border, ring, track, knob or arc, each declaring `uiMark: true`) to 3:1, in every mode, on every host: `tokens.js` repairs what it is handed with `lift` (the host's `lift` of `plan-surface-v2.md`, same vectors) and caps each fill so the text on it keeps its floor. Hairlines and the focus ring are raised to 3:1 (a 25 % ring is about 1.6:1 on black). The **warning** role (`theme.warning`, amber) is worked out like the others and held to 4.5:1 on the surface, hover and fill; it is amber only where the panel owns its colours (standalone, styled, or a host that hands one over), and the label in hosted-opaque, as for destructive, so the glyph and the word carry it there. `contrast` is the one WCAG body that `Bar.qml` in omarchy-notch has; the test compares them. Destructive is red only where the panel owns its colours.
+
+**Spacing.** One named scale for both densities: `theme.sp.xs` 4, `sm` 8, `md` 12, `lg` 16, `xl` 24, `xxl` 32 (`tokens.js` `SPACING`), each through `theme.space()` so it follows the user's spacing scale. Margins, gaps and insets use the names; `space(n)` stays for a value that is not on the scale. Density changes the row height only (30 notch, 32 standalone); there are no other fixed heights.
+
+**Text.** Three levels in the one monospace face. *Primary* is `theme.label` (headlines are `headlineWeight`). *Secondary* is `theme.secondary`: values, captions, section titles. *Metadata* is `theme.metadata` with `metadataWeight` (Light): tips on the foot line, codes under Details, small print (`URow.valueQuiet`). `metadata` is secondary eased toward the surface and lifted to the same 4.5:1 on the surface and every fill, so it is never louder than secondary, but on a theme whose secondary already sits near 4.5:1 the colour step is small and the weight carries the difference. A face with no Light weight shows Regular. `MIN_TEXT` (11 px) still holds for all three.
 
 **Motion.** `arrive` 0.72 / 0.6 / 350 ms (anything that grows; 3.8 % overshoot), `control` 0.85 / 0.55 / 200 ms, `celebrate` 0.60 / 450 ms (one use), `exit` OutCubic 180 ms, `fade` out 90 / in 150, `press` scale 0.97 over 60 ms, `stagger` 40 ms capped at 240. Springs only for what arrives; never on a colour or an opacity.
 
