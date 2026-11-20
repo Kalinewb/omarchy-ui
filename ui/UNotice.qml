@@ -92,9 +92,10 @@ Rectangle {
       width: column.width - x
       text: root.details
       wrapMode: Text.WrapAnywhere
-      color: root.theme.secondary
+      color: root.theme.metadata
       font.family: root.theme.fontFamily
       font.pixelSize: root.theme.footnoteSize
+      font.weight: root.theme.metadataWeight
     }
   }
 }

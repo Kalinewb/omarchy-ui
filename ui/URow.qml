@@ -15,6 +15,8 @@ Item {
   property string label: ""
   // Read-only text on the right. A state that cannot be changed is shown here.
   property string value: ""
+  // The value is small print (who set it, where it came from): metadata, not secondary.
+  property bool valueQuiet: false
   property string variant: "row"
   property string tip: ""
   // A row that is itself the control (opens a page); it gets hover, focus and a name.
@@ -89,9 +91,10 @@ Item {
       visible: root.value !== ""
       anchors.verticalCenter: parent.verticalCenter
       text: root.value
-      color: root.theme.secondary
+      color: root.valueQuiet ? root.theme.metadata : root.theme.secondary
       font.family: root.theme.fontFamily
       font.pixelSize: root.theme.bodySize
+      font.weight: root.valueQuiet ? root.theme.metadataWeight : Font.Normal
     }
     Item {
       id: slot

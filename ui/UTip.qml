@@ -87,9 +87,10 @@ Item {
     verticalAlignment: Text.AlignVCenter
     text: root.theme.foot
     elide: Text.ElideRight
-    color: root.theme.secondary
+    color: root.theme.metadata
     font.family: root.theme.fontFamily
     font.pixelSize: root.theme.footnoteSize
+    font.weight: root.theme.metadataWeight
     opacity: foot.text !== "" ? 1 : 0
     Behavior on opacity { NumberAnimation { duration: foot.text !== "" ? root.theme.fadeInMs : root.theme.fadeOutMs; easing.type: Easing.OutCubic } }
   }

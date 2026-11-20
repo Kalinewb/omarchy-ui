@@ -53,6 +53,7 @@ QtObject {
   readonly property color surface: paint(roles.surface)
   readonly property color label: paint(roles.label)
   readonly property color secondary: paint(roles.secondary)
+  readonly property color metadata: paint(roles.metadata)
   readonly property color accent: paint(roles.accent)
   readonly property color accentText: paint(roles.accentText)
   readonly property color destructive: paint(roles.destructive)
@@ -78,12 +79,16 @@ QtObject {
   readonly property var palette: ({ pairs: pairs })
 
   // ---- type: one family; title, headline (body size, DemiBold), body, footnote
+  // Three text levels in it: primary (`label`), secondary (`secondary`: values, captions, section
+  // titles) and metadata (`metadata` and `metadataWeight`: tips, codes, small print), by colour and
+  // weight as well as size. Every level holds 4.5:1; a face without a Light weight shows Regular.
   readonly property string fontFamily: hosted && host.fontFamily ? host.fontFamily : Commons.Style.font.family
   readonly property int bodySize: Math.max(Tokens.MIN_TEXT, density === "notch" ? Commons.Style.font.body : Commons.Style.font.subtitle)
   readonly property int titleSize: Math.max(bodySize, Commons.Style.font.title)
   readonly property int footnoteSize: Math.max(Tokens.MIN_TEXT, Commons.Style.font.bodySmall)
   readonly property int headlineWeight: Font.DemiBold
   readonly property int titleWeight: Font.DemiBold
+  readonly property int metadataWeight: Font.Light
 
   // ---- size
   readonly property int minHit: Tokens.MIN_HIT

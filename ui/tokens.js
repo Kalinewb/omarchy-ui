@@ -146,6 +146,9 @@ var DENSITY = {
   standalone: { row: 32, body: "subtitle" }    // Style.font.subtitle, 13
 }
 
+// How much of secondary stays when metadata is eased back toward the surface.
+var METADATA_EASE = 0.6
+
 // The fills a control is drawn with: the label colour tinted over the surface.
 var ALPHA = { fill: 0.04, hover: 0.08, selected: 0.18, pressed: 0.22, raised: 0.08, hairline: 0.4 }
 
@@ -181,6 +184,7 @@ function reducedFrom(env) {
 //   p.surface     what the panel sits on (host.color; Omarchy's background)
 //   p.foreground  the label colour
 //   p.secondary   optional; else the label at 60 %
+//   (metadata, the third text level, is worked out from secondary: see below)
 //   p.accent      optional; else the label colour
 //   p.urgent      optional; red
 //   p.focusAlpha  optional; Style.focusBorderAlpha
@@ -215,6 +219,12 @@ function roles(p) {
   }
 
   var secondary = legible(p.secondary !== undefined ? p.secondary : mix(S, label, 0.6), TEXT)
+  // The third text level (tips, codes, "set by the installer"): secondary eased
+  // back toward the surface, then lifted to the same 4.5:1 floor, so it is the
+  // quietest text that still reads. Never louder than secondary; where the
+  // floor leaves no room (a mid-tone surface) it is secondary, or the label.
+  var metadata = legible(mix(S, secondary, METADATA_EASE), TEXT)
+  if (contrast(metadata, S) > contrast(secondary, S)) metadata = secondary
   var accent = p.accent !== undefined ? over(p.accent, S) : label
   var accentMark = lift(accent, S, MARK)
   var accentText = legible(accent, TEXT)
@@ -228,7 +238,7 @@ function roles(p) {
   return {
     mode: mode, opaque: opaque,
     surface: S,
-    label: label, secondary: secondary,
+    label: label, secondary: secondary, metadata: metadata,
     accent: accentMark, accentText: accentText, destructive: destructive,
     fill: tint(a.fill), hover: tint(a.hover), selected: tint(a.selected), pressed: tint(a.pressed),
     // Level 2 floats over content (a tip, a toast, an open pick): a solid colour in every mode, or the text behind would show through.
@@ -253,6 +263,8 @@ function pairs(r) {
     { name: "secondary on surface",       role: "text", fg: r.secondary,   bg: [r.surface] },
     { name: "label on fill",              role: "text", fg: r.label,       bg: [r.fill, r.hover, r.selected, r.pressed, r.raised] },
     { name: "secondary on fill",          role: "text", fg: r.secondary,   bg: [r.fill, r.hover, r.raised] },
+    { name: "metadata on surface",        role: "text", fg: r.metadata,     bg: [r.surface] },
+    { name: "metadata on fill",           role: "text", fg: r.metadata,     bg: [r.fill, r.hover, r.raised] },
     { name: "accent text on surface",     role: "text", fg: r.accentText,  bg: [r.surface, r.hover] },
     { name: "destructive on surface",     role: "text", fg: r.destructive, bg: [r.surface, r.hover, r.fill] },
     { name: "accent mark on surface",     role: "ui",   fg: r.accent,      bg: [r.surface] },

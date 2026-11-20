@@ -81,7 +81,7 @@ Item {
         USwitch { theme: root.theme; label: "Show the date"; checked: root.showDate; onToggled: root.showDate = !root.showDate } }
       URow { theme: root.theme; label: "Show the battery"
         USwitch { theme: root.theme; label: "Show the battery"; checked: root.showBattery; onToggled: root.showBattery = !root.showBattery } }
-      URow { theme: root.theme; label: "Update channel"; value: "Set by the installer" }
+      URow { theme: root.theme; label: "Update channel"; value: "Set by the installer"; valueQuiet: true }
       URow { theme: root.theme; label: "Scope"
         USegmented { theme: root.theme; label: "Scope"; value: root.scope; onPicked: function(v) { root.scope = v }
           options: [{ value: "all", label: "Everything" }, { value: "apps", label: "Apps" }, { value: "none", label: "Nothing" }] } }
@@ -227,6 +227,30 @@ Item {
         }
         UTip { theme: root.theme; line: true; anchors.left: parent.left; anchors.right: parent.right; anchors.bottom: parent.bottom
           Component.onCompleted: root.theme.foot = "Shows the date next to the time." }
+      }
+    }
+
+    USection {
+      theme: root.theme
+      title: "Text: primary, secondary, metadata"
+      Text {
+        text: "Primary: the label, what a row is called"
+        color: root.theme.label
+        font.family: root.theme.fontFamily
+        font.pixelSize: root.theme.bodySize
+      }
+      Text {
+        text: "Secondary: values, captions, section titles"
+        color: root.theme.secondary
+        font.family: root.theme.fontFamily
+        font.pixelSize: root.theme.bodySize
+      }
+      Text {
+        text: "Metadata: tips, codes, small print"
+        color: root.theme.metadata
+        font.family: root.theme.fontFamily
+        font.pixelSize: root.theme.footnoteSize
+        font.weight: root.theme.metadataWeight
       }
     }
 

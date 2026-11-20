@@ -115,13 +115,13 @@ for (const [name, host] of Object.entries(hosts)) {
     results.filter(x => !x.pass).forEach(x => failing.push(`${name} / ${mode} / ${x.name} ${x.ratio.toFixed(2)} < ${x.floor}`))
   }
 }
-check(`${Object.keys(hosts).length} hosts x 3 modes x 12 pairs = ${pairsChecked} pairs all hold their floor (text 4.5:1, marks 3:1)`, failing.length === 0, failing.slice(0, 4).join('; '))
+check(`${Object.keys(hosts).length} hosts x 3 modes x ${T.check(rolesFor('hosted', hosts['black host (the notch)'])).length} pairs = ${pairsChecked} pairs all hold their floor (text 4.5:1, marks 3:1)`, failing.length === 0, failing.slice(0, 4).join('; '))
 
 section('roles: what each mode promises')
 {
   const host = hosts['black host (the notch)']
   const hosted = rolesFor('hosted', host), styled = rolesFor('styled', host), alone = rolesFor('standalone', Object.assign({}, hosts['catppuccin-oled (this desktop)']))
-  const colourRoles = ['surface', 'label', 'secondary', 'accent', 'accentText', 'destructive', 'fill', 'hover', 'selected', 'pressed', 'raised', 'hairline', 'ring', 'trackOn', 'knobOn', 'trackOff', 'knobOff', 'disabled']
+  const colourRoles = ['surface', 'label', 'secondary', 'metadata', 'accent', 'accentText', 'destructive', 'fill', 'hover', 'selected', 'pressed', 'raised', 'hairline', 'ring', 'trackOn', 'knobOn', 'trackOff', 'knobOff', 'disabled']
   const translucent = r => colourRoles.filter(k => T.translucent(r[k]))
   check('hosted-opaque: every role is an opaque colour (zero translucent)', translucent(hosted).length === 0, translucent(hosted).join(','))
   check('hosted-opaque on white: the same', translucent(rolesFor('hosted', hosts['white host'])).length === 0)
@@ -142,6 +142,31 @@ section('roles: what each mode promises')
   })())
 }
 
+section('roles: the three text levels (label, secondary, metadata)')
+{
+  const bad = [], same = [], quieter = []
+  for (const [name, host] of Object.entries(hosts)) for (const mode of ['standalone', 'hosted', 'styled']) {
+    const r = rolesFor(mode, host)
+    // every background a metadata line can meet, at the 4.5:1 text floor
+    const backs = [r.surface, r.fill, r.hover, r.raised].map(b => T.over(b, r.surface))
+    const worst = Math.min(...backs.map(b => T.contrast(r.metadata, b)))
+    if (worst < T.TEXT - 1e-9) bad.push(`${name}/${mode} ${worst.toFixed(2)}`)
+    if (r.metadata.a !== 1) bad.push(`${name}/${mode} is translucent`)
+    const cm = T.contrast(r.metadata, r.surface), cs = T.contrast(r.secondary, r.surface), cl = T.contrast(r.label, r.surface)
+    if (cm > cs + 1e-9 || cs > cl + 1e-9) bad.push(`${name}/${mode} order ${cl.toFixed(2)} ${cs.toFixed(2)} ${cm.toFixed(2)}`)
+    if (T.hex(r.metadata) === T.hex(r.secondary)) same.push(`${name}/${mode}`)
+    else quieter.push(`${name}/${mode}`)
+  }
+  check('metadata holds 4.5:1 on the surface and on every fill, is opaque, and is never louder than secondary (which is never louder than the label), on every host in every mode', bad.length === 0, bad.slice(0, 3).join('; '))
+  check('on the notch\'s black host metadata is a step quieter than secondary, not the same colour', quieter.includes('black host (the notch)/hosted') && quieter.includes('catppuccin-oled (this desktop)/standalone'), `${quieter.length} of ${quieter.length + same.length} host-modes differ`)
+  {
+    const r = rolesFor('hosted', hosts['black host (the notch)'])
+    check('on black: label 21:1, secondary 6.4:1, metadata 5.2:1: three levels, all over the floor', near(T.contrast(r.label, r.surface), 21, 1e-6) && T.contrast(r.secondary, r.surface) > 6 && T.contrast(r.metadata, r.surface) > 4.5 && T.contrast(r.metadata, r.surface) < 6, [r.label, r.secondary, r.metadata].map(c => T.contrast(c, r.surface).toFixed(2)).join(' / '))
+  }
+  check('the metadata pairs are in T.pairs and T.check, text role, floor 4.5', ['metadata on surface', 'metadata on fill'].every(n => T.check(rolesFor('hosted', hosts['black host (the notch)'])).some(x => x.name === n && x.role === 'text' && x.floor === 4.5)))
+  check('a host that hands over a failing label still gets metadata at 4.5:1 (repaired, not trusted)', T.contrast(rolesFor('hosted', hosts['host hands over a failing label (#444 on black)']).metadata, '#000000') >= 4.5)
+}
+
 section('roles: every stock and user theme, in every mode')
 {
   const dirs = ['/usr/share/omarchy/themes', path.join(os.homedir(), '.config/omarchy/themes')]
@@ -158,12 +183,14 @@ section('roles: every stock and user theme, in every mode')
   }
   const usable = themes.filter(t => t.bg && t.fg && t.accent && t.urgent)
   const bad = []
+  const louder = usable.flatMap(t => ['standalone', 'hosted', 'styled'].filter(mode => { const r = T.roles({ mode, surface: t.bg, foreground: t.fg, accent: t.accent, urgent: t.urgent }); return T.contrast(r.metadata, r.surface) > T.contrast(r.secondary, r.surface) + 1e-9 }).map(mode => t.name + '/' + mode))
   let n = 0
   for (const t of usable) for (const mode of ['standalone', 'hosted', 'styled']) {
     const r = T.roles({ mode, surface: t.bg, foreground: t.fg, accent: t.accent, urgent: t.urgent })
     T.check(r).forEach(x => { n++; if (!x.pass) bad.push(`${t.name}/${mode}/${x.name} ${x.ratio.toFixed(2)}`) })
   }
   check(`${usable.length} themes (${themes.length - usable.length} without a full palette skipped) x 3 modes: all ${n} pairs hold`, usable.length > 10 && bad.length === 0, bad.slice(0, 4).join('; ') || dirs.filter(fs.existsSync).join(' + '))
+  check(`metadata is never louder than secondary in any of those themes`, louder.length === 0, louder.slice(0, 4).join('; '))
   // a stock theme whose urgent colour alone fails 4.5:1, to show the repair is doing work
   const weak = usable.filter(t => T.contrast(t.urgent, t.bg) < 4.5)
   check(`${weak.length} themes hand over an urgent colour under 4.5:1; the kit lifts it (e.g. ${weak.slice(0, 3).map(t => t.name).join(', ')})`, weak.every(t => T.contrast(T.roles({ mode: 'standalone', surface: t.bg, foreground: t.fg, accent: t.accent, urgent: t.urgent }).destructive, t.bg) >= 4.5))

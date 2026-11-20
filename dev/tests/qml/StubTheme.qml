@@ -12,6 +12,7 @@ QtObject {
   property color surface: "#000000"
   property color label: "#ffffff"
   property color secondary: "#8d8d93"
+  property color metadata: "#7e7e81"
   property color accent: "#ffffff"
   property color accentText: "#ffffff"
   property color destructive: "#ff6b6b"
@@ -35,6 +36,7 @@ QtObject {
   property int footnoteSize: 11
   property int headlineWeight: Font.DemiBold
   property int titleWeight: Font.DemiBold
+  property int metadataWeight: Font.Light
 
   property int minHit: 24
   property int rowHeight: 32
