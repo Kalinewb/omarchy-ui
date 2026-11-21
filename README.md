@@ -133,7 +133,7 @@ The gate (`dev/check-ui.sh`) fails on: a hand-edited `ui/`; a type in `ui/` not 
 | plugin | state |
 |---|---|
 | OLED Corners | **adopted**: 1.2.0 on `main` of [Kalinewb/omarchy-oled-corners](https://github.com/Kalinewb/omarchy-oled-corners) (`cbdc13f`), vendored from kit commit `b88b2af` |
-| eGPU | migration built and reviewed, **not yet merged** |
+| eGPU | **adopted**: on `main` of [Kalinewb/omarchy-egpu](https://github.com/Kalinewb/omarchy-egpu) (`93a125e`), vendored from kit commit `b88b2af` |
 | Profiles, Face, Notch | not started |
 
 The adopters vendor the same `ui/` as 1.0.0 (a docs-only release does not change a hash). `docs/BASELINE.md` has the audit figures for all five from before any of this.
