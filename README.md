@@ -1,20 +1,57 @@
 # omarchy-ui
 
-The shared UI kit for the kalinewb Omarchy plugins (notch, profiles, face, corners, egpu): one set of tokens, motion and controls, so every plugin looks and behaves the same. One back, one close, three dismiss words, one switch, one confirm, one key map.
+The shared UI kit for the kalinewb Omarchy plugins (notch, profiles, face, corners, egpu): one set of tokens, motion and controls, so every plugin looks and behaves the same. One back, one close, three dismiss words, one switch, one confirm, one key map. **Version 1.0.0** ([CHANGELOG](CHANGELOG.md), [VERSIONING](VERSIONING.md)). MIT.
 
-Not a plugin: there is no `manifest.json`, and it is never listed or installable. Each plugin **copies `ui/` into its own repo** (no symlinks, no cross-plugin imports, installs stay one `git clone`) with `dev/sync-ui.sh`. MIT.
+**What it is.** A folder of QML components (`ui/`), the pure-JavaScript logic behind them (colour roles held to contrast floors, the key map, the spring curve, an error table), and the tools that go with it: a sync script, a consistency gate and an offscreen render harness. Eighteen QML files: a theme, a key router and sixteen components, from a button to a confirm row.
 
-Status: **Phase 0** of `plan-apple-ui.md` (kit and gate, no plugin migrated). The gallery below is the look the plugins will adopt; it waits for approval.
+**What it is not.** It is **not a plugin**: there is no `manifest.json`, and it is never listed or installable. It is not a dependency you install or import from somewhere else: each plugin **copies `ui/` into its own repo** with `dev/sync-ui.sh` (no symlinks, no cross-plugin imports, installs stay one `git clone`) and keeps the copy unedited, which a gate checks by hash. It is not a light theme, a gesture toolkit or a design system for apps other than Omarchy shell plugins.
 
 ![standalone](docs/gallery/standalone.png)
 
-## Using it
+## Quick start
 
 ```sh
-# in a plugin repo, once, with a local checkout of this repo beside it
-../omarchy-ui/dev/sync-ui.sh --from ../omarchy-ui --tools          # all of ui/, and the gate's scripts
-../omarchy-ui/dev/sync-ui.sh --from ../omarchy-ui --only UButton,URow,USwitch   # or a subset (what they use comes too)
-./dev/check-ui.sh --walk Panel.qml                                 # the gate, with the walk on this root
+git clone https://github.com/Kalinewb/omarchy-ui ../omarchy-ui && git -C ../omarchy-ui checkout v1.0.0     # in your plugin's repo
+../omarchy-ui/dev/sync-ui.sh --from ../omarchy-ui --to . --tools --only UButton,URow,USwitch,UKeys     # or no --only for all of ui/
+# in your QML: import "ui" / UTheme { id: theme; host: surfaceHost } / UButton { theme: theme; text: "Done" }
+./dev/check-ui.sh --walk Panel.qml                                                                       # the gate, with the walk on your root
+# then: docs/adoption.md, and tick docs/migration-checklist.md
+```
+
+## Three modes
+
+| mode | when | colour |
+|---|---|---|
+| **standalone** | `host` is null | Omarchy's palette (`Commons.Color`), alpha fills |
+| **hosted-opaque** | `host` set, `host.styled` not true (surface contract 1) | only what the notch hands over (`color`, `foreground`, `secondary`, `accent`), every colour a computed **solid**: never a translucent item, gradient or blur |
+| **styled** | `host.styled === true` (contract 2) | the kit's own roles and alpha fills over the host's surface; when the notch's guard falls back, `styled` goes false and the same bindings give hosted-opaque by themselves |
+
+`host` is any `surfaceHost`-shaped object (`color`, `foreground`, `secondary`, `accent`, `radiusFor(size)` or `radius`, `fontFamily`, optionally `styled`, `reducedMotion` and `warning`). Density follows: **notch** rows are 30 px with 12 px body, **standalone** 32 px with 13; both use the one spacing scale below.
+
+![hosted, black](docs/gallery/hosted-black.png)
+
+## Documentation
+
+| | |
+|---|---|
+| [docs/components.md](docs/components.md) | every component: properties, signals, keys, roles, an example and a picture ([docs/components/](docs/components/)) |
+| [docs/design-principles.md](docs/design-principles.md) | the decisions, each with its reason, where it lives in the code and how it is held |
+| [docs/adoption.md](docs/adoption.md) | adopting the kit in a plugin, step by step |
+| [docs/migration-checklist.md](docs/migration-checklist.md) | the tick-list a migration follows, with the lessons of the first one |
+| [VERSIONING.md](VERSIONING.md) | semver for a vendored kit, what is breaking, how `ui/KIT` and `Tokens.MAJOR` relate, how a plugin updates |
+| [CHANGELOG.md](CHANGELOG.md) | what changed |
+| [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) | proposing a component and the gate; what the kit can and cannot do, and how to report |
+| [docs/BASELINE.md](docs/BASELINE.md) | where the five plugins stood before adopting it |
+| [docs/gallery/](docs/gallery/) | every component in every mode on one sheet |
+
+## Using it, in more detail
+
+```sh
+# in a plugin repo, once, with a local checkout of this repo beside it (--to . is the plugin)
+../omarchy-ui/dev/sync-ui.sh --from ../omarchy-ui --to . --tools                              # all of ui/, and the gate's scripts
+../omarchy-ui/dev/sync-ui.sh --from ../omarchy-ui --to . --tools --only UButton,URow,USwitch  # or a subset (what they use comes too)
+./dev/check-ui.sh --walk Panel.qml                                                           # the gate, with the walk on this root
+# later: ./dev/sync-ui.sh --from ../omarchy-ui, with the same flags (the script is now in the plugin, so --to defaults to it)
 ```
 
 ```qml
@@ -33,18 +70,6 @@ Item {                                   // the plugin's root
 `UTheme` is not a singleton (a singleton cannot see a plugin's `surfaceHost`); it is passed down as `theme: theme`, and every component declares `required property var theme` and reads nothing else. The `U` prefix is mandatory: a bare `Row`, `Button` or `Switch` collides with QtQuick, QtQuick.Controls and `qs.Ui`, where the last import wins.
 
 `ui/KIT` (written by the sync, never by hand) holds `omarchy-ui <40-hex sha of the checkout's HEAD>`, `major <n>`, and a sha256 per copied file. `dev/check-ui.sh` fails if a listed file was edited or an unlisted file sits in `ui/`: a fix goes here, then a re-sync. The sync is copy-only: it never clones, fetches or pulls, and never runs anything from the checkout, so the marketplace scanner has nothing to ask about (`dev/test.sh` runs the scanner on a fixture with and without it). It refuses a checkout with uncommitted changes under `ui/` or `dev/`, so the sha always describes what was copied.
-
-## Three modes
-
-| mode | when | colour |
-|---|---|---|
-| **standalone** | `host` is null | Omarchy's palette (`Commons.Color`), alpha fills |
-| **hosted-opaque** | `host` set, `host.styled` not true (surface contract 1) | only what the notch hands over (`color`, `foreground`, `secondary`, `accent`), every colour a computed **solid**: never a translucent item, gradient or blur |
-| **styled** | `host.styled === true` (contract 2) | the kit's own roles and alpha fills over the host's surface; when the notch's guard falls back, `styled` goes false and the same bindings give hosted-opaque by themselves |
-
-`host` is any `surfaceHost`-shaped object (`color`, `foreground`, `secondary`, `accent`, `radiusFor(size)`, `fontFamily`, optionally `styled`, `reducedMotion`). Density follows: **notch** rows are 30 px with 12 px body, **standalone** 32 px with 13; both use the one spacing scale below.
-
-![hosted, black](docs/gallery/hosted-black.png)
 
 ## What is in `ui/`
 
@@ -84,20 +109,39 @@ Item {                                   // the plugin's root
 
 ```sh
 ./dev/test.sh              # everything: lint, node tests, behaviour tests, the walk's and the gate's self-tests, sync, scanner, gallery
-./dev/test.sh --quick      # lint and node only
+./dev/test.sh --quick      # lint, node (including the docs check) and the behaviour tests
 ./dev/gallery.sh           # render the gallery in every mode to docs/gallery/*.png and print the contrast table
 ./dev/gallery.sh --live    # open it in a real window
+./dev/render-component.sh --all --theme gruvbox   # one picture per component to docs/components/*.png
 ./dev/check-ui.sh --score  # the consistency gate and score, on this repo or  --repo <dir> --ref <sha>
 ./dev/baseline.sh          # the five plugins' baselines
 ```
 
-- `dev/tests/*.mjs` (node): `keys.js` (the key map and Esc order), `tokens.js` (every role pair in every mode on 16 hosts and on all 51 installed themes, `lift`, the one contrast body), `spring.js` (`Spring.overshoot` and the sampled curves), `errors.js`, and the kit's shape.
+- `dev/tests/*.mjs` (node): `keys.js` (the key map and Esc order), `tokens.js` (every role pair in every mode on 16 hosts and on all 51 installed themes, `lift`, the one contrast body), `spring.js` (`Spring.overshoot` and the sampled curves), `errors.js`, the kit's shape, and `docs.mjs` (every relative link in the markdown, a section and a picture for every component, and that every name a `qml` example sets exists in the component).
 - `dev/tests/qml/tst_kit.qml` (`qmltestrunner`, a stub theme): real key presses through the components, including the full Esc order.
 - `dev/gallery.qml` is every component in every state on one sheet; `dev/harness/ui-gallery.qml` renders it with a fake `surfaceHost` (radius 10, black or white) offscreen (`QT_QPA_PLATFORM=offscreen`, OpenGL RHI, as omarchy-notch `dev/glow.sh`).
 - `dev/harness/ui-walk.qml` walks a root's `children` and checks names, 24 px targets, 11 px text, text contrast **measured from rendered pixels**, loops under reduced motion, and no translucent item in hosted-opaque mode. `dev/check-ui.sh` runs it in seven configurations.
 
 The gate (`dev/check-ui.sh`) fails on: a hand-edited `ui/`; a type in `ui/` not starting with `U`; outside `ui/`, `pixelSize: <digit>`, `"#hex"`, `Qt.rgba(<digits>`, `radius: <digit>`, `duration: <digit>`, `Style.font.caption`; a private Switch, Toggle, Choice, Chip, Confirm, Tip or Toast component, a `*Row` that is not a `URow`, `ToggleSwitch`, `ConfirmDialog`, `Dropdown`, `PanelActionButton`, `ToolTip`, `Button`, `Toggle`, `TextField`; a dismiss label of Close, Keep, Later, Dismiss, OK, Okay; raw `Key_Escape` or `onEscapePressed`. A line that must stay carries `// ui-allow: <reason>` and is listed. It measures structure, not behaviour. See `docs/BASELINE.md` for where the five plugins stand.
 
+## Status
+
+**1.0.0**, the first release. `Tokens.MAJOR` is 1, `./dev/test.sh` passes (lint, 7 node suites, the behaviour tests, the walk and gate on fixtures, the sync round trip, the scanner on a fixture, the gallery in every mode), and the gallery and `docs/components/` are rendered from this source. Nothing has been tried inside the running notch: `styled` mode is exercised against a fake host until the notch's guard is live, and `gallery.sh --live` (a real window) is written and not part of the tests.
+
+**Which plugins use it: none yet, as merged code.** As of 2026-11-21:
+
+| plugin | state |
+|---|---|
+| OLED Corners | migrated on a branch, `ui-kit` (commits `f216e1e` to `29c0b51`, vendored from `b88b2af`), **not merged and not pushed** |
+| eGPU | in progress on a branch, `ui-kit` (two commits and uncommitted work), **not merged and not pushed** |
+| Profiles, Face, Notch | not started |
+
+The branches vendor the same `ui/` as 1.0.0 (a docs-only release does not change a hash). `docs/BASELINE.md` has the audit figures for all five from before any of this.
+
 ## Not here
 
-Plugin migrations (Corners, eGPU, Profiles, Face, Notch: later phases, each its own gate); anything installable; a light theme (dark only); gestures and 44 px targets (the minimum is 24 px).
+Plugin migrations beyond the two above (each its own gate); anything installable; a light theme (dark only); gestures and 44 px targets (the minimum is 24 px).
+
+## Licence
+
+MIT, see [LICENSE](LICENSE).

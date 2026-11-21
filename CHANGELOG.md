@@ -35,7 +35,11 @@ Documentation and release files for 1.0.0 (2026-11-21, no change to `ui/`)
 
 - `VERSIONING.md`, this changelog, `docs/components.md` with a picture of every component in `docs/components/`, `docs/design-principles.md`, `docs/adoption.md`, `docs/migration-checklist.md`, `CONTRIBUTING.md`, `SECURITY.md`, the pull request and issue templates under `.github/`, `docs/github-setup.md`, a refreshed README and `RELEASE-NOTES-1.0.0.md`.
 - `dev/render-component.sh`, `dev/specimens.qml` and `dev/harness/ui-component.qml`: one component at a time, a black hosted panel beside a standalone panel, offscreen, with the method of `dev/gallery.sh`.
-- `dev/check-docs.sh` (run by `dev/test.sh`): every relative link in the markdown resolves, every component has a reference entry and a picture, and every property a code example sets exists in that component's source.
+- `dev/tests/docs.mjs` (run by `dev/test.sh`, also with `--quick`): every relative link and anchor in the markdown resolves, every component in `ui/` has a section in `docs/components.md` and a picture under 150 KB, and every property, signal and handler a `qml` example sets exists in that component's source.
+
+### Fixed
+
+- The README's example for `dev/sync-ui.sh` named no `--to`, which the script refuses when run from the kit (`--from and --to are the same directory`); it now shows `--to .`. Documentation only.
 
 ### Deprecated
 
