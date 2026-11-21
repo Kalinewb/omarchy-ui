@@ -30,7 +30,7 @@ run() { # run <name> <command...>: a part that prints its own checks
 }
 
 run "QML lint and script syntax" ./dev/lint.sh
-for t in kit keys spring errors contrast; do run "node: $t" node dev/tests/$t.mjs; done
+for t in kit keys spring errors contrast docs; do run "node: $t" node dev/tests/$t.mjs; done
 run "behaviour: real key presses through the components (qmltestrunner)" ./dev/tests/qml.sh
 ((quick)) && { echo; ((failures)) && { echo "${RED}$failures part(s) failed${RESET}"; exit 1; }; echo "${GREEN}quick checks pass${RESET}"; exit 0; }
 
