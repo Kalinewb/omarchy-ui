@@ -1,5 +1,3 @@
-<!-- DRAFT, not published. Before `gh release create`: delete this comment, set the date, and re-check the Status lines against the plugin repos on that day. -->
-
 # omarchy-ui 1.0.0
 
 The first release of the shared UI kit for the kalinewb Omarchy plugins: one set of tokens, motion and controls, so every plugin looks and behaves the same. One back, one close, three dismiss words, one switch, one confirm, one key map.

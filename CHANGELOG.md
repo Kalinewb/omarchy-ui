@@ -4,7 +4,7 @@ All notable changes to omarchy-ui are recorded here. The format follows [Keep a 
 
 The entries for 1.0.0 are taken from `git log` (the short hashes are the commits). 1.0.0 is the first release: it has no date until it is tagged.
 
-## [1.0.0] - Unreleased
+## [1.0.0] - 2026-11-21
 
 `Tokens.MAJOR` (`ui/tokens.js`) is 1 for this release.
 

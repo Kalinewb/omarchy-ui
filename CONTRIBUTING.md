@@ -37,7 +37,7 @@ A pull request for a component brings, in small commits:
 ./dev/test.sh             # everything: also the walk and the gate on fixtures made to fail, the sync round trip, the scanner on a fixture, the gallery in every mode
 ```
 
-They need the installed Omarchy shell (`/usr/share/omarchy`, or set `OMARCHY_PATH`), `qt6-declarative` (`qmllint`, `qmltestrunner`) and `node`. The scanner part is skipped when `OMARCHY_SCAN` (default `~/Work/plans/omarchy-suite/bin/scan.mjs`) does not exist. Everything runs offscreen: nothing opens a window, installs, reloads the shell or touches a plugin. A pull request should leave `./dev/test.sh` green and say so.
+They need the installed Omarchy shell (`/usr/share/omarchy`, or set `OMARCHY_PATH`), `qt6-declarative` (`qmllint`, `qmltestrunner`) and `node`. The scanner part is skipped when `OMARCHY_SCAN` (the maintainer's own scanner script) is not set or does not exist. Everything runs offscreen: nothing opens a window, installs, reloads the shell or touches a plugin. A pull request should leave `./dev/test.sh` green and say so.
 
 ## The sync round trip
 
