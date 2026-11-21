@@ -128,15 +128,15 @@ The gate (`dev/check-ui.sh`) fails on: a hand-edited `ui/`; a type in `ui/` not 
 
 **1.0.0**, the first release. `Tokens.MAJOR` is 1, `./dev/test.sh` passes (lint, 7 node suites, the behaviour tests, the walk and gate on fixtures, the sync round trip, the scanner on a fixture, the gallery in every mode), and the gallery and `docs/components/` are rendered from this source. Nothing has been tried inside the running notch: `styled` mode is exercised against a fake host until the notch's guard is live, and `gallery.sh --live` (a real window) is written and not part of the tests.
 
-**Which plugins use it: none yet, as merged code.** As of 2026-11-21:
+**Which plugins use it.** As of 2026-11-21:
 
 | plugin | state |
 |---|---|
-| OLED Corners | migrated on a branch, `ui-kit` (commits `f216e1e` to `29c0b51`, vendored from `b88b2af`), **not merged and not pushed** |
-| eGPU | in progress on a branch, `ui-kit` (two commits and uncommitted work), **not merged and not pushed** |
+| OLED Corners | **adopted**: 1.2.0 on `main` of [Kalinewb/omarchy-oled-corners](https://github.com/Kalinewb/omarchy-oled-corners) (`cbdc13f`), vendored from kit commit `b88b2af` |
+| eGPU | migration built and reviewed, **not yet merged** |
 | Profiles, Face, Notch | not started |
 
-The branches vendor the same `ui/` as 1.0.0 (a docs-only release does not change a hash). `docs/BASELINE.md` has the audit figures for all five from before any of this.
+The adopters vendor the same `ui/` as 1.0.0 (a docs-only release does not change a hash). `docs/BASELINE.md` has the audit figures for all five from before any of this.
 
 ## Not here
 

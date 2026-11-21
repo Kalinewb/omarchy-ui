@@ -30,8 +30,8 @@ Then follow [docs/adoption.md](docs/adoption.md). `ui/KIT` records the commit, `
 
 ## Status and known limits
 
-- **No plugin has adopted it as merged code yet.** OLED Corners has a migration on an unmerged `ui-kit` branch and eGPU has one in progress; Profiles, Face and the Notch have not started.
-- `styled` mode (surface contract 2) is exercised against a fake host; nothing has been tried inside the running notch.
+- **One plugin has adopted it so far:** OLED Corners (1.2.0 on `main`, `cbdc13f`). The eGPU migration is built and reviewed but not merged; Profiles, Face and the Notch have not started.
+- `styled` mode (surface contract 2) is exercised only against a fake host. Hosted-opaque mode has been tried in the running notch for one panel (OLED Corners).
 - The metadata text level differs from secondary by a few hundredths of a contrast ratio on many themes; the Light weight carries the rest, and a face without a Light weight shows Regular.
 - `warning` is an amber default unless a host hands one over (Omarchy's palette has no yellow). In hosted-opaque mode warning and error are told apart by their glyph and spoken word, not colour.
 - `UStepper` has no typed entry. A `float` tip is clipped by any ancestor that clips; under the notch use the `foot` placement.
