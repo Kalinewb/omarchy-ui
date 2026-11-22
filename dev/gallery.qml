@@ -213,6 +213,14 @@ Item {
         destructive: true
         UButton { text: "Remove Ana"; kind: "destructive"; theme: root.theme; anchors.right: parent.right }
       }
+      UConfirmSheet {
+        theme: root.theme
+        width: parent.width
+        sentence: "Remove Ana? Her face data is erased from this computer, every profile that shared it is renamed, and the windows she had open are closed. There is no undo."
+        verb: "Remove Ana"
+        destructive: true
+        asking: true
+      }
     }
 
     USection {

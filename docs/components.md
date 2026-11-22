@@ -539,7 +539,9 @@ Indeterminate is a 270 degree arc turning once every 900 ms, linear. Under reduc
 
 ![UConfirmSheet](components/UConfirmSheet.png)
 
-`ui/UConfirmSheet.qml`. The confirm: an inline row, never an overlay or a window. It replaces the action row it belongs to, in place: one sentence naming the consequence (60 characters at most, "Remove Ana? Her face data is erased."), then Cancel and the verb. The slot is as tall as the larger of the two states, so nothing around it moves; the swap is a 90 ms fade. Esc is Cancel.
+`ui/UConfirmSheet.qml`. The confirm: an inline row, never an overlay or a window. It replaces the action row it belongs to, in place: one sentence naming the consequence ("Remove Ana? Her face data is erased."), then Cancel and the verb. The slot is as tall as the larger of the two states, so nothing around it moves; the swap is a 90 ms fade. Esc is Cancel.
+
+**The sentence wraps** (there is no 60-character cap since 1.1). There are two layouts, chosen by whether the sentence fits one line beside the buttons: if it does, it sits left of them and the sheet is one row high, as before; if not (`stacked`), it wraps over the full width and Cancel and the verb sit right-aligned on a line of their own under it, so the sheet is the wrapped text plus one row. Nothing is cut with an ellipsis any more: in 1.0 a sentence too long for the room beside the buttons was elided. Past 400 characters (`sentenceMax`) the sheet logs a warning: a consequence that long wants a shorter sentence and a [`UNotice`](#unotice) for the rest. The focus rule is unchanged: with `destructive` Cancel has the initial focus in either layout, and Tab goes Cancel then the verb.
 
 A **destructive** verb is never the default: Cancel takes the focus and Enter does not fire the verb. Any other verb takes the focus, so Enter confirms.
 
@@ -558,11 +560,12 @@ UConfirmSheet {
 
 | Property | Type | Default | Notes |
 |---|---|---|---|
-| `sentence` | string | `""` | over 60 characters logs a warning |
+| `sentence` | string | `""` | wraps; over 400 characters logs a warning |
 | `verb` | string | `""` | the confirm button's label |
 | `destructive` | bool | `false` | red-capable `destructive` button, Cancel has the focus |
 | `asking` | bool | `false` | true shows the question |
 | `actions` | default alias | | the row it replaces, shown until `ask()` |
+| `stacked`, `sentenceMax` | | | read-only: the sentence is on its own lines above the buttons; the 400-character soft limit |
 
 Signals: `confirmed()`, `cancelled()`. Functions: `ask()`, `cancel()`, `confirm()`. Roles: `label` and the two `UButton`s'.
 

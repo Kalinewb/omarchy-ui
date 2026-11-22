@@ -122,6 +122,20 @@ Item {
         font.family: root.theme.fontFamily
         font.pixelSize: root.theme.footnoteSize
       }
+      UConfirmSheet {
+        theme: root.theme
+        width: root.sheetWidth
+        sentence: "Remove Ana? Her face data is erased from this computer, every profile that shared it is renamed, and the windows she had open are closed. There is no undo."
+        verb: "Remove Ana"
+        destructive: true
+        asking: true
+      }
+      Text {
+        text: "a sentence that does not fit one line wraps; the buttons sit under it"
+        color: root.theme.secondary
+        font.family: root.theme.fontFamily
+        font.pixelSize: root.theme.footnoteSize
+      }
     }
   }
 

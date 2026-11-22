@@ -12,6 +12,10 @@ The entries for 1.0.0 are taken from `git log` (the short hashes are the commits
 
 - `UField.secret` (bool, default `false`): a masked field for a password prompt. Bullets, no predictive text or history (`ImhSensitiveData`), the accessible name is the label and never the text, and Esc does not revert but is the next layer's at once (the `edit` layer is not joined), which `docs/components.md` documents. `UField.clear()` wipes the typed text. A plain field is unchanged.
 
+### Changed
+
+- `UConfirmSheet` sentences wrap. The 60-character cap and the warning at it are gone; the sentence sits beside the buttons when it fits one line and otherwise wraps over the full width with Cancel and the verb right-aligned under it (`stacked`, read-only). The soft limit is 400 characters (`sentenceMax`), which only logs a warning. Visible difference on a re-sync: a sentence that 1.0 elided with "..." because it did not fit beside the buttons is now shown whole on two or more lines, so that sheet is taller. A sentence that fits is drawn as before. Focus (Cancel first when destructive), Tab order and Esc are unchanged.
+
 ## [1.0.0] - 2026-11-21
 
 `Tokens.MAJOR` (`ui/tokens.js`) is 1 for this release.

@@ -237,6 +237,33 @@ Item {
       compare(yes.count, 1, "Tab to the verb, then Enter, fires it")
     }
 
+    function test_confirm_long_sentence_wraps_stays_compact_and_keeps_the_focus_on_cancel() {
+      var long = "Remove Ana? Her face data is erased from this computer, every profile that shared it is renamed, and the windows she had open are closed. There is no undo."
+      var p = page()
+      var short = createTemporaryObject(confirmC, p, { destructive: true, width: 600 })
+      verify(!short.stacked, "a short sentence stays beside the buttons")
+      compare(short.height, stub.rowHeight, "and the sheet is one row high, as in 1.0")
+      var c = createTemporaryObject(confirmC, p, { destructive: true, sentence: long, y: 100 })
+      verify(long.length > 60, "past the 1.0 cap")
+      verify(c.stacked, "it wraps with the buttons under it")
+      var text = c.children[1].children[1]       // asker > the sentence (probe is the first child)
+      compare(text.text, long)
+      verify(text.lineCount > 1, "more than one line: " + text.lineCount)
+      verify(text.contentWidth <= c.width, "inside the sheet's width")
+      verify(c.height > 2 * stub.rowHeight && c.height < 8 * stub.rowHeight, "compact: " + c.height)
+      var no = createTemporaryObject(spyC, root, { target: c, signalName: "cancelled" })
+      var yes = createTemporaryObject(spyC, root, { target: c, signalName: "confirmed" })
+      c.ask()
+      keyClick(Qt.Key_Return)
+      compare(yes.count, 0, "Enter still does not fire a destructive verb")
+      compare(no.count, 1, "the focus was on Cancel")
+      var q = createTemporaryObject(confirmC, p, { destructive: true, sentence: long, y: 300 })
+      var no2 = createTemporaryObject(spyC, root, { target: q, signalName: "cancelled" })
+      q.ask(); keyClick(Qt.Key_Escape)
+      compare(no2.count, 1, "Esc is Cancel")
+      compare(root.backs, 0)
+    }
+
     function test_confirm_plain_verb_takes_the_focus_so_enter_confirms() {
       var p = page()
       var c = createTemporaryObject(confirmC, p, { destructive: false })
