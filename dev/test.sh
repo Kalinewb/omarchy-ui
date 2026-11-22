@@ -61,7 +61,7 @@ check "the allowed line is under its own heading" "1" "$(grep -c 'Allowed with /
 
 # ---------------------------------------------------------------- sync, hash, subset
 part "sync-ui.sh and the KIT hash"
-cp dev/fixtures/plugin-clean/Panel.qml dev/fixtures/plugin-clean/manifest.json "$work/clean/"
+cp -r dev/fixtures/plugin-clean/. "$work/clean/"   # Panel.qml, manifest.json, and views/ and common/ for the walk to reach
 git init -q "$work/clean" && git -C "$work/clean" config user.email t@t && git -C "$work/clean" config user.name t
 # the kit at HEAD is what sync reads; a dirty ui/ or dev/ is refused, so sync from a snapshot of the working tree
 snap="$work/kit"; mkdir -p "$snap" && cp -r ui dev "$snap/" && rm -rf "$snap/dev/fixtures" "$snap/docs"
@@ -85,6 +85,7 @@ part "the gate on the clean plugin, with the kit vendored in"
 out=$(cd "$work/clean" && ./dev/check-ui.sh --walk Panel.qml 2>&1 | sed 's/\x1b\[[0-9;]*m//g'); rc=$?
 echo "${DIM}$(grep -E 'pass|FAIL|skip' <<<"$out" | cut -c1-150 | sed 's/^/    /')${RESET}"
 (cd "$work/clean" && ./dev/check-ui.sh --walk Panel.qml >/dev/null 2>&1); check "check-ui exits 0 on the clean plugin (static rules and the walk in 7 configurations)" "0" "$?"
+check "the walk reached the views/ and common/ folders (a Strings singleton in common/, a view in views/): 7 configurations pass" "7" "$(grep -c 'pass  \(standalone\|hosted\|styled\)' <<<"$out")"
 check "the KIT hash line passes" "1" "$(grep -c 'pass  ui/ matches ui/KIT' <<<"$out")"
 check "a *Row component whose root is a URow (component NamedRow: URow) is not flagged" "1" "$(grep -c 'pass  every \*Row component is a URow' <<<"$out")"
 
@@ -117,7 +118,7 @@ part "the marketplace scanner, on a fixture plugin with and without the kit and 
 SCAN=${OMARCHY_SCAN:-$HOME/Work/plans/omarchy-suite/bin/scan.mjs}
 if [[ -f $SCAN ]] && command -v node >/dev/null; then
   mkdir -p "$work/scan-before" "$work/scan-after"
-  cp dev/fixtures/plugin-clean/Panel.qml dev/fixtures/plugin-clean/manifest.json "$work/scan-before/"
+  cp -r dev/fixtures/plugin-clean/. "$work/scan-before/"
   cp -r "$work/clean/." "$work/scan-after/" 2>/dev/null; rm -rf "$work/scan-after/.git"
   for d in scan-before scan-after; do git init -q "$work/$d"; git -C "$work/$d" add -A; done
   before=$(node "$SCAN" "$work/scan-before" fixture/clean 2>&1 | jq -c '{outcome, findings: [.findings[].id], caps: [.caps[].id]}' 2>/dev/null)

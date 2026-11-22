@@ -149,6 +149,8 @@ It prints `pass` or `FAIL` with `file:line` for: a `ui/` that differs from `ui/K
 
 **The walk** loads a root QML file under a fake `surfaceHost` offscreen, seven times (standalone; hosted black and white; styled black and white; hosted and standalone with reduced motion), and checks every focusable item has an `Accessible.name`, is at least 24 px, no text is under 11 px, every text is 4.5:1 against what it is drawn on **measured from the rendered pixels**, no animation loops under reduced motion, and no item is translucent in hosted mode. The root is any QML file with a `theme` property.
 
+**Views in other folders.** The root may use types from the repo's other folders: `views/`, `common/`, a singleton with its `qmldir`. Quickshell only builds the type list of a folder the shell file imports, so `dev/walk.sh` imports every folder of the repo that holds a QML type for the walk's own shell file (a type is a file named with a capital; `ui/`, `dev/`, `docs/`, `upstream/`, `node_modules/` and dot-folders are left out, and so is a folder of only lowercase-named files, which Qt cannot import). Nothing to configure. Inside a view use relative imports (`import "../ui"`, `import "../common"`), which resolve from the file. A module import of the plugin's own (a `qs.` name) was not tried.
+
 If the panel needs a model, a host or a service, give the walk a file that stands one in. `dev/walk-root.qml`, for a `SettingsPanel.qml` that takes a `theme`, a `surfaceHost` and a `model`:
 
 ```qml

@@ -1,5 +1,6 @@
 import QtQuick
 import "ui"
+import "views"
 
 // A plugin panel that follows the kit: nothing in it the gate rejects, and a
 // `theme` property for the walk to hand a fake host to. dev/test.sh vendors
@@ -7,9 +8,6 @@ import "ui"
 Item {
   id: root
   property var theme: null
-
-  // A *Row component is allowed when its root is a URow (the gate once flagged this one).
-  component NamedRow: URow {}
   implicitWidth: 420
   implicitHeight: 260
 
@@ -37,14 +35,7 @@ Item {
         }
         UClose { theme: root.theme; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
       }
-      USection {
-        theme: root.theme
-        title: "Shape"
-        first: true
-        URow { theme: root.theme; label: "Follow the screen"; USwitch { theme: root.theme; label: "Follow the screen"; checked: true } }
-        NamedRow { theme: root.theme; label: "Corners"; value: "Rounded" }
-        URow { theme: root.theme; label: "Radius"; UStepper { theme: root.theme; label: "Radius"; from: 0; to: 40; value: 12; unit: " px" } }
-      }
+      ShapeSection { theme: root.theme; width: parent.width }
       Item { width: 1; height: root.theme.space(16) }
       Row {
         spacing: root.theme.space(8)
