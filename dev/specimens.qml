@@ -290,6 +290,27 @@ Item {
       }
       URow { theme: root.theme; variant: "stacked"; label: "Greeting"
         UField { theme: root.theme; width: parent.width; label: "Greeting"; placeholder: "Say something" } }
+      // The list-item form: icon, a second line, a badge, trailing icon buttons, and `current` (the bar and the semibold label).
+      // Below: current; the keyboard cursor (showFocus); hover; a long label with a badge.
+      Item { width: 1; height: root.theme.sp.lg }
+      URow {
+        theme: root.theme; clickable: true; icon: "\u25cf"; label: "Work"; detail: "3 apps, last used today"; badge: "Default"; current: true
+        trailing: Row {
+          spacing: root.theme.sp.xs
+          UButton { theme: root.theme; glyph: "+"; name: "Add to Work" }
+          UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Work"; kind: "destructive" }
+        }
+      }
+      URow {
+        theme: root.theme; clickable: true; icon: "\u25cb"; label: "Personal"; detail: "Last used yesterday"; showFocus: true
+        trailing: Row {
+          spacing: root.theme.sp.xs
+          UButton { theme: root.theme; glyph: "+"; name: "Add to Personal" }
+          UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Personal"; kind: "destructive" }
+        }
+      }
+      URow { theme: root.theme; clickable: true; icon: "\u25cb"; label: "Guest"; detail: "Never used"; hot: true }
+      URow { theme: root.theme; clickable: true; label: "A label too long to fit beside its badge and its actions without being cut"; badge: "Locked"; detail: "Metadata under a long label" }
     }
   }
 

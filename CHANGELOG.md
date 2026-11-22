@@ -11,11 +11,12 @@ The entries for 1.0.0 are taken from `git log` (the short hashes are the commits
 ### Added
 
 - `UField.secret` (bool, default `false`): a masked field for a password prompt. Bullets, no predictive text or history (`ImhSensitiveData`), the accessible name is the label and never the text, and Esc does not revert but is the next layer's at once (the `edit` layer is not joined), which `docs/components.md` documents. `UField.clear()` wipes the typed text. A plain field is unchanged.
-
 - `UButton` icon-only form: `glyph` (the mark, drawn instead of `text`) and `name` (the accessible name and tooltip, required with a glyph; a warning without), `iconOnly` read-only. Same kinds, focus ring and selected rules, a square of `rowHeight` (`controlHeight` for a `link`), at least 24 px. No new class: the one button covers it. A button with no `glyph` is unchanged.
+- `URow` list-item form: `icon`, `detail` (a second line), `badge`, `current` (an accent bar and a semibold label) and `listItem`, for a selectable entry with an icon, two lines, a badge and actions in `trailing`. All default off; a row that sets none of them is laid out as in 1.0. Accessible description (detail and badge) and `Accessible.selected` (`current`). The keyboard cursor is the existing `showFocus`.
 
 ### Changed
 
+- `URow`: the click area now sits below the row's slots, so a button or control in the control or `trailing` slot of a `clickable` row gets its own click and the row's `activated()` does not fire for it (in 1.0 the row's area covered them). `hot` is read from a `HoverHandler`, so a `clickable` row stays hovered while the pointer is over its own buttons. A non-clickable row is unaffected.
 - `UConfirmSheet` sentences wrap. The 60-character cap and the warning at it are gone; the sentence sits beside the buttons when it fits one line and otherwise wraps over the full width with Cancel and the verb right-aligned under it (`stacked`, read-only). The soft limit is 400 characters (`sentenceMax`), which only logs a warning. Visible difference on a re-sync: a sentence that 1.0 elided with "..." because it did not fit beside the buttons is now shown whole on two or more lines, so that sheet is taller. A sentence that fits is drawn as before. Focus (Cancel first when destructive), Tab order and Esc are unchanged.
 
 ## [1.0.0] - 2026-11-21

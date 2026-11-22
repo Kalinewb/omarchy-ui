@@ -43,6 +43,18 @@ Item {
   Component { id: toastC; UToast { theme: stub } }
   Component { id: ringC; URing { theme: stub } }
   Component { id: rowC; URow { theme: stub; label: "Row"; width: 300; USwitch { theme: stub; label: "x" } } }
+  Component {
+    id: itemC
+    URow {
+      theme: stub; width: 400; clickable: true
+      icon: "\u25cf"; label: "Work"; detail: "3 apps, last used today"; badge: "Default"; current: true
+      trailing: Row {
+        spacing: 4
+        UButton { theme: stub; glyph: "+"; name: "Add to Work" }
+        UButton { theme: stub; glyph: "\u2715"; name: "Remove Work"; kind: "destructive" }
+      }
+    }
+  }
   Component { id: stackedC; URow { theme: stub; label: "Row"; variant: "stacked"; width: 300; UField { theme: stub; label: "f"; width: parent.width } } }
 
   TestCase {
@@ -381,6 +393,28 @@ Item {
       wait(50)
       var b = ring.rotation; wait(250)
       compare(ring.rotation, b, "and holds still under reduced motion")
+    }
+
+    function test_row_list_item_form_is_taller_marks_current_and_leaves_its_actions_clickable() {
+      var plain = createTemporaryObject(rowC, root)
+      var r = createTemporaryObject(itemC, root)
+      compare(plain.height, stub.rowHeight, "a plain row is unchanged")
+      verify(r.height > stub.rowHeight, "two lines make it taller: " + r.height)
+      verify(r.lead >= stub.controlHeight, "the label starts after the icon column: " + r.lead)
+      compare(r.Accessible.name, "Work")
+      compare(r.Accessible.description, "3 apps, last used today. Default")
+      verify(r.Accessible.selected, "the current one is selected for a screen reader")
+      var spy = createTemporaryObject(spyC, root, { target: r, signalName: "activated" })
+      mouseClick(r, 60, r.height / 2)
+      compare(spy.count, 1, "a click on the row activates it")
+      var add = r.trailing[0].children[0]
+      var addSpy = createTemporaryObject(spyC, root, { target: add, signalName: "clicked" })
+      var p = add.mapToItem(r, add.width / 2, add.height / 2)
+      mouseClick(r, p.x, p.y)
+      compare(addSpy.count, 1, "a click on a trailing button is the button's")
+      compare(spy.count, 1, "and not the row's")
+      r.current = false; r.badge = ""; r.detail = ""; r.icon = ""
+      compare(r.height, stub.rowHeight + stub.sp.xs, "with the extras off it is as tall as any row with a button in its trailing slot")
     }
 
     function test_row_height_follows_density_and_stacked_grows() {

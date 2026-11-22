@@ -95,6 +95,24 @@ Item {
       URow { theme: root.theme; variant: "stacked"; label: "Greeting"
         UField { theme: root.theme; width: parent.width; label: "Greeting"; placeholder: "Say something"; value: root.greeting; onCommitted: function(t) { root.greeting = t } } }
       URow { theme: root.theme; label: "Manage profiles"; value: "›"; clickable: true }
+      URow {
+        theme: root.theme; clickable: true; icon: "\u25cf"; label: "Work"; detail: "3 apps, last used today"; badge: "Default"; current: true
+        trailing: Row {
+          spacing: root.theme.sp.xs
+          UButton { theme: root.theme; glyph: "+"; name: "Add to Work" }
+          UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Work"; kind: "destructive" }
+        }
+      }
+      URow {
+        theme: root.theme; clickable: true; icon: "\u25cb"; label: "Personal"; detail: "Last used yesterday"; showFocus: true
+        trailing: Row {
+          spacing: root.theme.sp.xs
+          UButton { theme: root.theme; glyph: "+"; name: "Add to Personal" }
+          UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Personal"; kind: "destructive" }
+        }
+      }
+      URow { theme: root.theme; clickable: true; icon: "\u25cb"; label: "Guest"; detail: "Never used"; hot: true }
+      URow { theme: root.theme; clickable: true; label: "A label too long to fit beside its badge and its actions without being cut"; badge: "Locked"; detail: "Metadata under a long label" }
     }
 
     USection {
@@ -107,6 +125,10 @@ Item {
         UButton { theme: root.theme; text: "Remove Ana"; kind: "destructive" }
         UButton { theme: root.theme; text: "Install Face ID"; kind: "primary" }
         UButton { theme: root.theme; text: "Try again"; kind: "link" }
+      }
+      Row {
+        spacing: root.theme.sp.sm
+        height: root.theme.rowHeight
         UButton { theme: root.theme; glyph: "+"; name: "Add" }
         UButton { theme: root.theme; glyph: "\u21bb"; name: "Refresh"; kind: "primary" }
         UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Ana"; kind: "destructive" }
@@ -146,9 +168,9 @@ Item {
         }
         Row {
           spacing: root.theme.sp.sm
-          UField { theme: root.theme; width: 150; label: "Empty"; placeholder: "Name" }
-          UField { theme: root.theme; width: 150; label: "Focused"; value: "Ana"; hot: true }
-          UField { theme: root.theme; width: 150; label: "Password"; secret: true; Component.onCompleted: input.text = "........" }
+          UField { theme: root.theme; width: 120; label: "Empty"; placeholder: "Name" }
+          UField { theme: root.theme; width: 120; label: "Focused"; value: "Ana"; hot: true }
+          UField { theme: root.theme; width: 120; label: "Password"; secret: true; Component.onCompleted: input.text = "........" }
           UStepper { theme: root.theme; label: "Radius"; value: 0; from: 0; to: 40; unit: " px" }
         }
         Row {

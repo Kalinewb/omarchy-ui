@@ -233,7 +233,7 @@ Signal: `clicked()`. Height: `rowHeight` (a `link` is `controlHeight`); width: l
 
 ![URow](components/URow.png)
 
-`ui/URow.qml`. One row: the label on the left, a value or a control on the right, an optional trailing slot, height by density. Its first child goes to the control slot.
+`ui/URow.qml`. One row: the label on the left, a value or a control on the right, an optional trailing slot, height by density. Its first child goes to the control slot. With `icon`, `detail`, `badge` and `current` it is also the list item (below): there is no second row component.
 
 | `variant` | Layout |
 |---|---|
@@ -263,12 +263,44 @@ A state that cannot be changed is a `value` on the right ("Set by the installer"
 | `variant` | string | `"row"` | `"row"` or `"stacked"` |
 | `tip` | string | `""` | float tip |
 | `clickable` | bool | `false` | the row is itself the control: hover, focus ring, a name, one tab stop |
+| `icon` | string | `""` | list-item form: a glyph at the left, in the label colour |
+| `detail` | string | `""` | list-item form: a second line under the label, in `metadata` (Light, footnote size) |
+| `badge` | string | `""` | list-item form: a word or two in a hairline pill after the label ("Default", "Locked") |
+| `current` | bool | `false` | list-item form: the chosen entry: an accent bar in the left margin and a semibold label |
+| `listItem` | bool | icon, detail or badge set | content starts after the margin the `current` bar sits in; set it for a list whose rows have none of those |
 | `control` | default alias | | the control slot |
 | `trailing` | alias | | a second slot after it (buttons, a job) |
 | `hot`, `showFocus` | bool | the real state | state inputs |
-| `stacked`, `gap` | | | read-only |
+| `stacked`, `gap`, `lead`, `twoLines`, `withIcon` | | | read-only |
 
-Signal: `activated()` (a `clickable` row). Width: the parent's width, else 320. Keys on a `clickable` row: Enter, Return, Space. Roles: `label`, `secondary`, `metadata`, `disabled`, `hover`, `pressed`, `ring`.
+**The list item.** A selectable entry with an icon, two lines of text, a badge, actions and a current mark is a `URow` with `clickable: true` and the extra properties filled in; the `trailing` slot takes the actions (icon-only [`UButton`](#ubutton)s in a `Row`):
+
+```qml
+URow {
+  theme: theme
+  clickable: true
+  icon: "\u25cf"
+  label: "Work"
+  detail: "3 apps, last used today"
+  badge: "Default"
+  current: profile === "work"
+  showFocus: cursor === index                  // a list that keeps its own keyboard cursor
+  onActivated: switchTo("work")
+  trailing: Row {
+    spacing: theme.sp.xs
+    UButton { theme: theme; glyph: "+"; name: "Add to Work"; onClicked: addTo("work") }
+    UButton { theme: theme; glyph: "\u2715"; name: "Remove Work"; kind: "destructive"; onClicked: confirm.ask() }
+  }
+}
+```
+
+- **Two marks, two meanings.** `current` is "this one is chosen" (the bar and the weight, so it never rests on colour alone; the `selected` fill is deliberately not used, because only the label is guaranteed 4.5:1 on it and the row's `detail` and `badge` are quiet text). The keyboard cursor is `showFocus`, the 2 px ring, exactly as for every control: a list that moves its own cursor with the arrow keys sets `showFocus` on the row under it, and a list that leaves it to Tab needs nothing. `hot` is the pointer.
+- **Height.** A detail makes it two lines (the label, the detail, and `sp.md` of air, never under `rowHeight`); trailing buttons make it as tall as the button plus `sp.xs`, as for any row with a button in the slot. The label elides, the badge does not, and the detail elides.
+- **Clicks.** The row's click area sits below its slots, so a trailing button gets its own click and the row's `activated()` does not fire for it; the row stays hovered while the pointer is over a button.
+- **Screen reader.** The name is the label; the description is the detail and the badge; `Accessible.selected` is `current`.
+- Not for `stacked` rows (the extra properties are ignored there).
+
+Signal: `activated()` (a `clickable` row). Width: the parent's width, else 320. Keys on a `clickable` row: Enter, Return, Space. Roles: `label`, `secondary`, `metadata`, `disabled`, `hover`, `pressed`, `ring`, `accent` (the `current` bar), `hairline` (the badge).
 
 ---
 

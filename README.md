@@ -81,7 +81,7 @@ Item {                                   // the plugin's root
 | Switch | `USwitch` | 22 x 42 track in a 24 px target |
 | Pick | `USegmented` (2 to 4), `UPick` (3 or more) | |
 | Field | `UField` (Enter commits, Esc reverts; `secret: true` masks it and Esc cancels at once), `UStepper` (`-` / `+`, Left / Right) | |
-| Row, section | `URow` (`row` and `stacked`, a `trailing` slot), `USection` | |
+| Row, list item, section | `URow` (`row` and `stacked`, a `trailing` slot; with `icon`, `detail`, `badge` and `current` it is the selectable list item), `USection` | |
 | Tip | `UTip` | `float` (a box) or `foot` (one reserved line, no box) |
 | Toast, notice | `UToast`, `UNotice` | `UNotice` has three tones: `info` (`i`), `warning` (`▲`) and `error` (`!`, the old `warn`), each a glyph and a spoken word as well as a colour; `UToast` has no tones. A code never reaches the surface; unknown codes read "Something went wrong." |
 | Empty, progress | `UEmpty`, `URing` | the ring is determinate or indeterminate, and holds still under reduced motion |
