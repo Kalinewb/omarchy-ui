@@ -80,7 +80,7 @@ Item {                                   // the plugin's root
 | Buttons | `UButton` | `primary` (one per surface), `quiet`, `destructive` (verb + object, last, never default), `link` (the `flow` variant) |
 | Switch | `USwitch` | 22 x 42 track in a 24 px target |
 | Pick | `USegmented` (2 to 4), `UPick` (3 or more) | |
-| Field | `UField` (Enter commits, Esc reverts), `UStepper` (`-` / `+`, Left / Right) | |
+| Field | `UField` (Enter commits, Esc reverts; `secret: true` masks it and Esc cancels at once), `UStepper` (`-` / `+`, Left / Right) | |
 | Row, section | `URow` (`row` and `stacked`, a `trailing` slot), `USection` | |
 | Tip | `UTip` | `float` (a box) or `foot` (one reserved line, no box) |
 | Toast, notice | `UToast`, `UNotice` | `UNotice` has three tones: `info` (`i`), `warning` (`▲`) and `error` (`!`, the old `warn`), each a glyph and a spoken word as well as a colour; `UToast` has no tones. A code never reaches the surface; unknown codes read "Something went wrong." |

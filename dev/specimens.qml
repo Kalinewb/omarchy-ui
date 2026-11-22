@@ -137,6 +137,9 @@ Item {
       Cap { caption: "empty: the placeholder"; UField { theme: root.theme; width: 220; label: "Name"; placeholder: "Name" } }
       Cap { caption: "a committed value"; UField { theme: root.theme; width: 220; label: "Name"; value: "Ana" } }
       Cap { caption: "focus"; UField { theme: root.theme; width: 220; label: "Name"; value: "Ana"; showFocus: true } }
+      // The mask is the point: the text is a row of dots, and what is typed here is not a real secret.
+      Cap { caption: "secret: masked"; UField { theme: root.theme; width: 220; label: "Password"; secret: true; Component.onCompleted: input.text = "........" } }
+      Cap { caption: "secret: empty, focus"; UField { theme: root.theme; width: 220; label: "Password"; placeholder: "Password"; secret: true; showFocus: true } }
     }
   }
 

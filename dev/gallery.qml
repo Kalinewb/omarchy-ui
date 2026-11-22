@@ -143,6 +143,7 @@ Item {
           spacing: root.theme.sp.sm
           UField { theme: root.theme; width: 150; label: "Empty"; placeholder: "Name" }
           UField { theme: root.theme; width: 150; label: "Focused"; value: "Ana"; hot: true }
+          UField { theme: root.theme; width: 150; label: "Password"; secret: true; Component.onCompleted: input.text = "........" }
           UStepper { theme: root.theme; label: "Radius"; value: 0; from: 0; to: 40; unit: " px" }
         }
         Row {

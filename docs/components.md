@@ -34,7 +34,7 @@ The key map is `ui/keys.js` `action(role, key)`; the controls call it.
 | `UStepper` | Left decreases, Right increases (clamped to `from`..`to`) |
 | `UPick` closed | Enter, Return, Space, Right or Down opens |
 | `UPick` open | Up and Down move, Home and End go to the first and last, Enter, Return or Space picks; Esc closes |
-| `UField` | Enter commits; Esc reverts an unsaved change |
+| `UField` | Enter commits; Esc reverts an unsaved change (a `secret` field: Esc is the next layer's at once) |
 | `URow` with `clickable` | Enter, Return or Space activates |
 | `UKeys` | Esc, in order: an edit, a tip, an open pick, a modal, back, then closes; Enter or Return that nothing took is `primary` |
 | Tab | the toolkit's: every control above is one tab stop |
@@ -349,7 +349,12 @@ Signal: `picked(string value)`; function `choose(i)`. Keys: see the table above.
 
 ```qml
 UField { theme: theme; label: "Name"; placeholder: "Name"; value: saved; onCommitted: function(t) { saved = t } }
+UField { theme: theme; label: "Password"; secret: true; onCommitted: function(t) { unlock(t); clear() } }
 ```
+
+**`secret: true`** is the masked field for a password prompt. The text is drawn as bullets (`echoMode: Password`, mask delay 0, so not even the last character shows), the input method gets `ImhSensitiveData | ImhNoPredictiveText | ImhNoAutoUppercase | ImhHiddenText` (no predictive text, no history), and the accessible name is `label`, never the text. Nothing in the field puts the text in a tooltip or a description; the `tip` is the plugin's own string.
+
+Esc differs, on purpose: a plain field with an unsaved edit keeps the first Esc to revert it, but a secret field never joins the `edit` layer, so the first Esc is the next layer's (a confirm, the prompt's own `modal`, the page's back) and a half-typed secret does not outlive the person's cancel. The field does not wipe itself when Esc lands elsewhere: the owner calls `clear()` when it closes the prompt, and after it has used the text. Leave `value` empty for a secret; `committed(text)` is the only way the text leaves, and the owner should hand it on (stdin, not a property) and not store it.
 
 | Property | Type | Default | Notes |
 |---|---|---|---|
@@ -357,11 +362,12 @@ UField { theme: theme; label: "Name"; placeholder: "Name"; value: saved; onCommi
 | `placeholder` | string | `""` | shown when empty and unfocused |
 | `value` | string | `""` | the committed text; the owner updates it from `committed` |
 | `tip` | string | `""` | float tip, on the text input |
+| `secret` | bool | `false` | masked, no predictive text; Esc cancels at once (see above) |
 | `input` | alias | | the inner `TextInput` (focus, `text`, `inputMethodHints`) |
 | `hot`, `showFocus` | bool | the real state | state inputs |
 | `dirty` | bool | | read-only: the text differs from `value` |
 
-Signal: `committed(string text)`. Width 200 and `controlHeight` by default; set `width` for more. Roles: `fill`, `hover`, `hairline`, `ring`, `label`, `secondary`, `disabled`, `accent` (selection).
+Signal: `committed(string text)`. Function: `clear()` (wipe the typed text). Width 200 and `controlHeight` by default; set `width` for more. Roles: `fill`, `hover`, `hairline`, `ring`, `label`, `secondary`, `disabled`, `accent` (selection).
 
 ---
 

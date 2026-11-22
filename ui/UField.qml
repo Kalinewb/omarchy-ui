@@ -4,7 +4,17 @@ import QtQuick
 // last committed value (the "edit" layer of UKeys: while there is a change
 // not yet committed, Esc is the field's, and the panel does not close).
 //
+// `secret: true` is the masked field (a password prompt): bullets instead of
+// the text, no predictive text or input-method history (echoMode Password,
+// ImhSensitiveData), and the accessible name is the label, never the text.
+// Esc then does NOT revert: the edit layer is not joined, so the first Esc is the next layer's
+// (a confirm, a prompt, the page) and a half-typed secret is never held while
+// the person thinks they cancelled; the owner calls clear() when it closes.
+// Keep `value` empty for a secret: `committed` is the only way the text leaves,
+// and nothing here stores, shows or names it.
+//
 //   UField { theme: theme; label: "Name"; value: saved; onCommitted: function(t) { saved = t } }
+//   UField { theme: theme; label: "Password"; secret: true; onCommitted: function(t) { unlock(t); clear() } }
 Item {
   id: root
   required property var theme
@@ -14,8 +24,13 @@ Item {
   // The committed text; the owner updates it from `committed`.
   property string value: ""
   property string tip: ""
+  // Masked, no predictive text, Esc cancels at once (see above).
+  property bool secret: false
   property alias input: edit
   signal committed(string text)
+
+  // Wipe the typed text (a secret that has been used, a prompt that closed).
+  function clear() { edit.text = "" }
 
   property bool hot: mouse.containsMouse
   property bool showFocus: edit.activeFocus
@@ -57,6 +72,12 @@ Item {
     font.family: root.theme.fontFamily
     font.pixelSize: root.theme.bodySize
     activeFocusOnTab: root.enabled
+    echoMode: root.secret ? TextInput.Password : TextInput.Normal
+    passwordCharacter: "\u2022"
+    passwordMaskDelay: 0     // never show the last character typed
+    inputMethodHints: root.secret
+      ? Qt.ImhSensitiveData | Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase | Qt.ImhHiddenText
+      : Qt.ImhNone
     Accessible.role: Accessible.EditableText
     Accessible.name: root.label
     onAccepted: root.committed(text)
@@ -73,6 +94,7 @@ Item {
     }
   }
 
-  UKeys { level: "edit"; open: root.dirty && edit.activeFocus; onEscaped: edit.text = root.value }
+  // A secret never joins the edit layer: Esc is the next layer's at once.
+  UKeys { level: "edit"; open: root.dirty && edit.activeFocus && !root.secret; onEscaped: edit.text = root.value }
   UTip { theme: root.theme; text: root.tip; target: edit }
 }

@@ -4,6 +4,14 @@ All notable changes to omarchy-ui are recorded here. The format follows [Keep a 
 
 The entries for 1.0.0 are taken from `git log` (the short hashes are the commits). 1.0.0 is the first release: it has no date until it is tagged.
 
+## [Unreleased]
+
+`Tokens.MAJOR` stays 1: every change below is additive.
+
+### Added
+
+- `UField.secret` (bool, default `false`): a masked field for a password prompt. Bullets, no predictive text or history (`ImhSensitiveData`), the accessible name is the label and never the text, and Esc does not revert but is the next layer's at once (the `edit` layer is not joined), which `docs/components.md` documents. `UField.clear()` wipes the typed text. A plain field is unchanged.
+
 ## [1.0.0] - 2026-11-21
 
 `Tokens.MAJOR` (`ui/tokens.js`) is 1 for this release.

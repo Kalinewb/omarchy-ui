@@ -34,6 +34,7 @@ Item {
   Component { id: stepC; UStepper { theme: stub; label: "Radius"; from: 0; to: 3; value: 2 } }
   Component { id: pickC; UPick { theme: stub; label: "Mod"; value: "b"; options: [{ value: "a", label: "A" }, { value: "b", label: "B" }, { value: "c", label: "C" }] } }
   Component { id: fieldC; UField { theme: stub; label: "Name"; value: "Ana"; width: 200 } }
+  Component { id: secretC; UField { theme: stub; label: "Password"; secret: true; width: 200 } }
   Component { id: backC; UBack { theme: stub } }
   Component { id: closeC; UClose { theme: stub } }
   Component { id: confirmC; UConfirmSheet { theme: stub; width: 400; sentence: "Remove Ana? Her face data is erased."; verb: "Remove" } }
@@ -49,6 +50,7 @@ Item {
 
     function init() { root.closes = 0; root.backs = 0; stub.reduced = false }
     function page() { return createTemporaryObject(pageC, root) }
+    function typeText(t) { for (var i = 0; i < t.length; i++) keyClick(t[i]) }
     function focused(item) { item.forceActiveFocus(); verify(item.activeFocus, "takes focus") }
 
     // ------------------------------------------------------------ activation keys
@@ -175,6 +177,47 @@ Item {
       verify(!f.dirty)
       keyClick(Qt.Key_Escape)
       compare(root.backs, 1, "clean again: Esc is the page's")
+    }
+
+    function test_secret_field_is_masked_and_never_names_its_text() {
+      var p = page()
+      var f = createTemporaryObject(secretC, p)
+      var plain = createTemporaryObject(fieldC, p)
+      compare(plain.input.echoMode, TextInput.Normal, "a plain field shows its text")
+      compare(plain.input.inputMethodHints, Qt.ImhNone)
+      compare(f.input.echoMode, TextInput.Password)
+      verify(f.input.inputMethodHints & Qt.ImhSensitiveData, "sensitive data: no history")
+      verify(f.input.inputMethodHints & Qt.ImhNoPredictiveText, "no predictive text")
+      focused(f.input)
+      typeText("hunter2")
+      compare(f.input.text, "hunter2", "the owner can still read it through committed")
+      verify(f.input.displayText.indexOf("hunter") < 0 && f.input.displayText.length === 7, "what is drawn is bullets: " + f.input.displayText)
+      compare(f.input.Accessible.name, "Password", "the name is the label, not the text")
+      compare(f.input.Accessible.role, Accessible.EditableText)
+      compare(f.Accessible.description, "", "no description carries the text")
+      var spy = createTemporaryObject(spyC, root, { target: f, signalName: "committed" })
+      keyClick(Qt.Key_Return)
+      compare(spy.count, 1); compare(spy.signalArguments[0][0], "hunter2")
+      f.clear()
+      compare(f.input.text, "", "clear() wipes it")
+    }
+
+    function test_esc_in_a_secret_field_cancels_at_once_and_a_plain_one_reverts_first() {
+      var p = page()
+      var f = createTemporaryObject(secretC, p)
+      focused(f.input)
+      typeText("hunter2")
+      verify(f.dirty, "there is typed text")
+      keyClick(Qt.Key_Escape)
+      compare(root.backs, 1, "the first Esc is the page's, not the field's")
+      compare(f.input.text, "hunter2", "the field does not revert: the owner clears it on close")
+      f.clear()
+      var g = createTemporaryObject(fieldC, p)
+      focused(g.input)
+      g.input.text = "Anna"
+      keyClick(Qt.Key_Escape)
+      compare(root.backs, 1, "a plain field with an edit keeps Esc for itself (unchanged)")
+      compare(g.input.text, "Ana")
     }
 
     function test_confirm_destructive_focuses_cancel_and_enter_does_not_fire_the_verb() {
