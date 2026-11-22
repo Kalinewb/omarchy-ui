@@ -7,6 +7,9 @@ import "ui"
 Item {
   id: root
   property var theme: null
+
+  // A *Row component is allowed when its root is a URow (the gate once flagged this one).
+  component NamedRow: URow {}
   implicitWidth: 420
   implicitHeight: 260
 
@@ -39,6 +42,7 @@ Item {
         title: "Shape"
         first: true
         URow { theme: root.theme; label: "Follow the screen"; USwitch { theme: root.theme; label: "Follow the screen"; checked: true } }
+        NamedRow { theme: root.theme; label: "Corners"; value: "Rounded" }
         URow { theme: root.theme; label: "Radius"; UStepper { theme: root.theme; label: "Radius"; from: 0; to: 40; value: 12; unit: " px" } }
       }
       Item { width: 1; height: root.theme.space(16) }

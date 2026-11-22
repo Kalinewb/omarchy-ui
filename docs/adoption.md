@@ -104,7 +104,7 @@ Item {                                          // the plugin's root: it has a `
 | `Choice`, chips, tabs, a per-row choice button | `USegmented` |
 | `ConfirmDialog`, an inline "are you sure" card | `UConfirmSheet` |
 | `ToolTip`, a private tip | `tip:` on the control, or `UTip` |
-| a private `*Row`, `SettingRow`, `StackedRow` | `URow` (`variant: "stacked"`) |
+| a private `*Row`, `SettingRow`, `StackedRow` | `URow` (`variant: "stacked"`); a component that only names a configured row can stay: `component ProfileRow: URow { ... }` passes the gate, because its root is a `URow` |
 | a section heading | `USection` |
 | a spinner, a busy indicator | `URing` |
 | an error card, a warning banner | `UNotice` (`tone`) with sentences from `errors.js` |

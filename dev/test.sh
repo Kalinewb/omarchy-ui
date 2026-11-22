@@ -86,6 +86,7 @@ out=$(cd "$work/clean" && ./dev/check-ui.sh --walk Panel.qml 2>&1 | sed 's/\x1b\
 echo "${DIM}$(grep -E 'pass|FAIL|skip' <<<"$out" | cut -c1-150 | sed 's/^/    /')${RESET}"
 (cd "$work/clean" && ./dev/check-ui.sh --walk Panel.qml >/dev/null 2>&1); check "check-ui exits 0 on the clean plugin (static rules and the walk in 7 configurations)" "0" "$?"
 check "the KIT hash line passes" "1" "$(grep -c 'pass  ui/ matches ui/KIT' <<<"$out")"
+check "a *Row component whose root is a URow (component NamedRow: URow) is not flagged" "1" "$(grep -c 'pass  every \*Row component is a URow' <<<"$out")"
 
 part "a hand edit, a stray file, a stray type"
 echo '// edit' >>"$work/clean/ui/URow.qml"
