@@ -115,7 +115,7 @@ check "syncing a smaller set removes what the kit put there before" "no" "$(cd "
 
 # ---------------------------------------------------------------- the marketplace scanner
 part "the marketplace scanner, on a fixture plugin with and without the kit and its scripts"
-SCAN=${OMARCHY_SCAN:-$HOME/Work/plans/omarchy-suite/bin/scan.mjs}
+SCAN=${OMARCHY_SCAN:-}   # the marketplace scanner (scan.mjs); set OMARCHY_SCAN to its path to run this part
 if [[ -f $SCAN ]] && command -v node >/dev/null; then
   mkdir -p "$work/scan-before" "$work/scan-after"
   cp -r dev/fixtures/plugin-clean/. "$work/scan-before/"
