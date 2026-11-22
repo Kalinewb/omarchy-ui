@@ -16,6 +16,7 @@ The entries for 1.0.0 are taken from `git log` (the short hashes are the commits
 
 ### Changed
 
+- `UNotice`: the mark's ring takes `theme.radius(height)` instead of a fixed circle, so it follows `host.radiusFor` (or Omarchy's corner radius) like every other shape. With a host radius of 10 or more it is still a circle (the mark is 20 px); on a squarer host it is a rounded or plain square. `dev/tests/kit.mjs` now fails any `radius:` in `ui/` that does not ask the theme.
 - `URow`: the click area now sits below the row's slots, so a button or control in the control or `trailing` slot of a `clickable` row gets its own click and the row's `activated()` does not fire for it (in 1.0 the row's area covered them). `hot` is read from a `HoverHandler`, so a `clickable` row stays hovered while the pointer is over its own buttons. A non-clickable row is unaffected.
 - `UConfirmSheet` sentences wrap. The 60-character cap and the warning at it are gone; the sentence sits beside the buttons when it fits one line and otherwise wraps over the full width with Cancel and the verb right-aligned under it (`stacked`, read-only). The soft limit is 400 characters (`sentenceMax`), which only logs a warning. Visible difference on a re-sync: a sentence that 1.0 elided with "..." because it did not fit beside the buttons is now shown whole on two or more lines, so that sheet is taller. A sentence that fits is drawn as before. Focus (Cancel first when destructive), Tab order and Esc are unchanged.
 

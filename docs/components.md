@@ -504,7 +504,7 @@ Signals: `acted()` (the action was pressed; the toast hides), `dismissed()` ("No
 
 ![UNotice](components/UNotice.png)
 
-`ui/UNotice.qml`. An inline notice: what happened and what to do, in one place on the page. The sentence comes from the plugin's own table (`errors.js`); an unknown code reads "Something went wrong." and the code appears only under Details. A code never reaches the surface any other way. The mark is a glyph in a ring and a screen reader hears the word, so the state never rests on colour alone.
+`ui/UNotice.qml`. An inline notice: what happened and what to do, in one place on the page. The sentence comes from the plugin's own table (`errors.js`); an unknown code reads "Something went wrong." and the code appears only under Details. A code never reaches the surface any other way. The mark is a glyph in a ring (the ring takes the host's radius like every shape, so on a square-cornered host it is a square) and a screen reader hears the word, so the state never rests on colour alone.
 
 | `tone` | Mark | Colour | Spoken |
 |---|---|---|---|

@@ -43,6 +43,9 @@ check('UTheme exposes pairs and palette ({pairs}) for plan-surface-v2.md, and th
 check('UTheme is not a singleton (it has to see a plugin\'s surfaceHost)', !/pragma Singleton/.test(text('UTheme.qml')))
 check('UTheme reads OMARCHY_REDUCED_MOTION and the NOTCH_ alias only through tokens.js reducedFrom', /reducedFrom/.test(text('UTheme.qml')) && /NOTCH_REDUCED_MOTION/.test(text('tokens.js')) && /OMARCHY_REDUCED_MOTION/.test(text('tokens.js')))
 
+section('radius')
+check('every `radius:` in a component asks the theme (no `width / 2` circle of its own): the host\'s radius runs through every shape', qml.filter(f => f !== 'UTheme.qml').every(f => [...code(f).matchAll(/\bradius:\s*([^\n]+)/g)].every(m => /\btheme\.radius\(|list\.radius/.test(m[1]))), qml.filter(f => f !== 'UTheme.qml').flatMap(f => [...code(f).matchAll(/\bradius:\s*([^\n]+)/g)].filter(m => !/\btheme\.radius\(|list\.radius/.test(m[1])).map(m => f + ': ' + m[1])).join('; '))
+
 section('the spacing scale')
 {
   const T = load('ui/tokens.js'), names = Object.keys(T.SPACING)
