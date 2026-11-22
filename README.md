@@ -77,7 +77,7 @@ Item {                                   // the plugin's root
 |---|---|---|
 | Back | `UBack` | chevron left of the title, "Back" tooltip and name. In the notch (a host with `panelBack`) the back step is the top-middle strip and Esc its alias, so this is not drawn there; see *Layout: the top-centre zone* |
 | Close | `UClose` | the one `✕`, top-right |
-| Buttons | `UButton` | `primary` (one per surface), `quiet`, `destructive` (verb + object, last, never default), `link` (the `flow` variant) |
+| Buttons | `UButton` | `primary` (one per surface), `quiet`, `destructive` (verb + object, last, never default), `link` (the `flow` variant); an icon-only form (`glyph` + `name`) for rows of actions |
 | Switch | `USwitch` | 22 x 42 track in a 24 px target |
 | Pick | `USegmented` (2 to 4), `UPick` (3 or more) | |
 | Field | `UField` (Enter commits, Esc reverts; `secret: true` masks it and Esc cancels at once), `UStepper` (`-` / `+`, Left / Right) | |

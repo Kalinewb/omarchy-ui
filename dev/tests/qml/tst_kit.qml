@@ -29,6 +29,7 @@ Item {
   }
 
   Component { id: buttonC; UButton { theme: stub; text: "Go" } }
+  Component { id: iconC; UButton { theme: stub; glyph: "\u270e"; name: "Rename" } }
   Component { id: switchC; USwitch { theme: stub; label: "Dark" } }
   Component { id: segC; USegmented { theme: stub; label: "Scope"; value: "b"; options: [{ value: "a", label: "A" }, { value: "b", label: "B" }, { value: "c", label: "C" }] } }
   Component { id: stepC; UStepper { theme: stub; label: "Radius"; from: 0; to: 3; value: 2 } }
@@ -64,6 +65,26 @@ Item {
       compare(spy.count, 3, "an arrow does not")
     }
     Component { id: spyC; SignalSpy { } }
+
+    function test_icon_button_is_a_named_24_px_button_with_the_same_keys() {
+      var b = createTemporaryObject(iconC, root), t = createTemporaryObject(buttonC, root)
+      verify(b.iconOnly && !t.iconOnly)
+      compare(b.Accessible.name, "Rename"); compare(b.Accessible.role, Accessible.Button)
+      verify(b.width >= stub.minHit && b.height >= stub.minHit, "24 px or more: " + b.width + "x" + b.height)
+      compare(b.width, b.height, "a square")
+      compare(b.height, t.height, "as tall as the text button beside it")
+      var p = createTemporaryObject(iconC, root, { kind: "primary" })
+      verify(p.height >= stub.rowHeight && p.isPrimary, "a primary icon button keeps the row height the walk asks of one")
+      var spy = createTemporaryObject(spyC, root, { target: b, signalName: "clicked" })
+      focused(b)
+      keyClick(Qt.Key_Return); keyClick(Qt.Key_Space)
+      compare(spy.count, 2, "Enter and Space click it")
+      var tip = b.children[b.children.length - 1]
+      wait(400)
+      verify(tip.shown && tip.text === "Rename", "its name is the tooltip")
+      b.enabled = false
+      verify(!b.activeFocus, "disabled: not a tab stop")
+    }
 
     function test_switch_toggles_on_space_and_return() {
       var s = createTemporaryObject(switchC, root)

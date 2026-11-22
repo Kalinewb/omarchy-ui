@@ -107,6 +107,11 @@ Item {
         UButton { theme: root.theme; text: "Remove Ana"; kind: "destructive" }
         UButton { theme: root.theme; text: "Install Face ID"; kind: "primary" }
         UButton { theme: root.theme; text: "Try again"; kind: "link" }
+        UButton { theme: root.theme; glyph: "+"; name: "Add" }
+        UButton { theme: root.theme; glyph: "\u21bb"; name: "Refresh"; kind: "primary" }
+        UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Ana"; kind: "destructive" }
+        UButton { theme: root.theme; glyph: "+"; name: "Add"; showFocus: true }
+        UButton { theme: root.theme; glyph: "+"; name: "Add"; enabled: false }
       }
     }
 

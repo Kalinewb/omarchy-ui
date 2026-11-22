@@ -77,6 +77,17 @@ Item {
         Cap { caption: "focus"; UButton { theme: root.theme; text: "Done"; kind: "primary"; showFocus: true } }
         Cap { caption: "disabled"; UButton { theme: root.theme; text: "Done"; kind: "primary"; enabled: false } }
       }
+      // The icon-only form: a glyph for the label, `name` is the accessible name and the tooltip.
+      Row {
+        spacing: root.theme.sp.sm
+        Cap { caption: "icon: quiet"; gap: 34; UButton { theme: root.theme; glyph: "+"; name: "Add" } }
+        Cap { caption: "hover"; gap: 34; UButton { theme: root.theme; glyph: "+"; name: "Add"; hot: true } }
+        Cap { caption: "focus"; gap: 34; UButton { theme: root.theme; glyph: "+"; name: "Add"; showFocus: true } }
+        Cap { caption: "primary"; gap: 34; UButton { theme: root.theme; glyph: "\u21bb"; name: "Refresh"; kind: "primary" } }
+        Cap { caption: "destructive"; gap: 34; UButton { theme: root.theme; glyph: "\u2715"; name: "Remove Ana"; kind: "destructive" } }
+        Cap { caption: "link"; gap: 34; UButton { theme: root.theme; glyph: "\u21bb"; name: "Refresh"; kind: "link" } }
+        Cap { caption: "disabled"; gap: 34; UButton { theme: root.theme; glyph: "+"; name: "Add"; enabled: false } }
+      }
     }
   }
 

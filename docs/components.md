@@ -183,7 +183,7 @@ Roles: `secondary`; spacing `sp.xl`, `sp.xs`.
 
 ![UButton](components/UButton.png)
 
-`ui/UButton.qml`. The one button. Four kinds, one word each.
+`ui/UButton.qml`. The one button. Four kinds, one word each, and an icon-only form (below); there is no second button class.
 
 | `kind` | Use | Look |
 |---|---|---|
@@ -206,11 +206,24 @@ Row {
 | Property | Type | Default | Notes |
 |---|---|---|---|
 | `text` | string | `""` | The label, and the accessible name |
+| `glyph` | string | `""` | Icon-only form: this mark is drawn instead of `text` |
+| `name` | string | `""` | Icon-only form: the accessible name and the tooltip, required with `glyph` (a warning without); never drawn |
 | `kind` | string | `"quiet"` | `"quiet"`, `"primary"`, `"destructive"`, `"link"` |
 | `finishes` | bool | `false` | The one that finishes a flow: semibold. A page-level `UKeys.onPrimary` can call `clicked()` on it |
 | `tip` | string | `""` | A float tip, at most 60 characters |
 | `hot`, `down`, `showFocus` | bool | the real state | state inputs |
-| `isLink`, `isPrimary`, `isDestructive` | bool | | read-only |
+| `isLink`, `isPrimary`, `isDestructive`, `iconOnly` | bool | | read-only |
+
+**Icon-only form.** For a row of actions that cannot each carry a word (add, refresh, share, remove) set `glyph`; it is the same button, so `kind`, `enabled`, `hot`/`down`/`showFocus`, the focus ring, the selected fill and accent outline of a primary, the red-capable destructive ink and the press all work as above, and there is no separate class to fail the gate. The mark is one character of the theme's font (or a Nerd Font glyph, which the walk still holds to 4.5:1 and 11 px) at `titleSize`. `name` is what a screen reader says and the tooltip (a longer `tip` replaces it), so it is a verb or noun, not "icon": "Add", "Refresh", "Remove Ana". The button is a square as tall as a text button (`rowHeight`, `controlHeight` for a `link`), never under 24 px, and it is one tab stop, so a row of six is six stops; a destructive one still goes through [`UConfirmSheet`](#uconfirmsheet). Keep an action that has a word as a text button: a glyph alone is for marks people already read (`+`, `↻`, `✕`), and `UClose` and `UBack` stay the one close and back.
+
+```qml
+Row {
+  spacing: theme.sp.xs
+  UButton { theme: theme; glyph: "+"; name: "Add"; onClicked: add() }
+  UButton { theme: theme; glyph: "\u21bb"; name: "Refresh"; kind: "primary"; onClicked: refresh() }
+  UButton { theme: theme; glyph: "\u2715"; name: "Remove Ana"; kind: "destructive"; onClicked: confirm.ask() }
+}
+```
 
 Signal: `clicked()`. Height: `rowHeight` (a `link` is `controlHeight`); width: label plus `2 * sp.lg` (`2 * sp.sm` for a link), never under 24 px. Disabled (`enabled: false`) draws `disabled` and is not a tab stop. Press scales to 0.97 over 60 ms (off under reduced motion). Keys: Enter, Return, Space. Roles: `label`, `hover`, `pressed`, `selected`, `accent`, `accentText`, `destructive`, `hairline`, `ring`, `disabled`.
 
